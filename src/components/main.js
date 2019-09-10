@@ -27,6 +27,7 @@ const Main = props => {
       );
     } else {
       if (!props.machineSelected) {
+
         return (
           <Feed
             cells={props.cells}
@@ -36,6 +37,7 @@ const Main = props => {
       } else {
         return (
           <Machine
+            allJobsParts={props.allJobsParts}
             machine={props.machineSelected}
             chats={props.chats}
             toggleMachineSelection={props.toggleMachineSelection}

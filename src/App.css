@@ -1557,3 +1557,7 @@ h1, h4, h5 {
       .5em 0 0 white;}
 }
 /* end of loading dots */
+.dropDownList{
+  display:flex;
+  justify-content:flex-start;
+}

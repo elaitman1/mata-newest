@@ -42,7 +42,9 @@ export default class App extends Component {
     toggledNavbarMenu: null,
     displayChat: null,
     displayProfile: null,
-    jobs:[]
+    jobs:[],
+    allJobsParts:[]
+
   };
 
   countDown = 0;
@@ -59,6 +61,7 @@ export default class App extends Component {
 
   // converts Date.now() milliseconds into the time, in the appropriate measurement, since the message was sent
   timeConversion = (millisec, type) => {
+
     if (type === "timer") {
       let seconds = Math.ceil(millisec / 1000);
       const hours = Math.floor(seconds / 3600);
@@ -74,6 +77,7 @@ export default class App extends Component {
       const minutes = (millisec / (1000 * 60)).toFixed(0);
       const hours = (millisec / (1000 * 60 * 60)).toFixed(0);
       if (seconds < 60) {
+
         return seconds + " Sec";
       } else if (minutes < 60) {
         const mins = parseInt(minutes) === 1 ? " Min" : " Mins";
@@ -87,6 +91,7 @@ export default class App extends Component {
 
   countDownTimers = () => {
     let timers = [];
+
     const cells = Object.keys(this.state.cells);
     for (let i = 0; i < cells.length; i++) {
       const cell = this.state.cells[cells[i]];
@@ -201,6 +206,8 @@ export default class App extends Component {
     const jobsParts = await this.fetchData(jobsPartsUrl).then(
       jobsPartsData => jobsPartsData
     );
+    
+    this.setState({allJobsParts: jobsParts})
     const reportingUrl = `https://www.matainventive.com/cordovaserver/database/jsonmataPrepAll.php?id=${id}`;
     const reporting = await this.fetchData(reportingUrl).then(
       reportingData => reportingData
@@ -228,6 +235,7 @@ export default class App extends Component {
       prepNotes,
       chatHistory
     ]).then(data => {
+
       const user = data[0];
       const notifications = data[1];
       const cells = data[2];
@@ -253,9 +261,13 @@ export default class App extends Component {
           device => device.cell_id === cell.cell_id
         );
         let cellDevsObj = {};
+
         cellDevices.forEach(cellDev => {
+
           const id = cellDev.device_id;
+
           const devObj = devicesDetails[id];
+
           cellDev["timeOn"] = this.timeConversion(
             parseInt(devObj.SumONTimeSeconds),
             "timeOn"
@@ -265,6 +277,7 @@ export default class App extends Component {
               parseInt(devObj.SumONTimeSeconds) *
               100
           );
+
           utilization = utilization.toString() === "NaN" ? 0 : utilization;
           cellDev["utilization"] = utilization;
           let timer = "";
@@ -274,6 +287,7 @@ export default class App extends Component {
             cellDev["timerStart"] = devTimer.MaxStartTimeActive;
             const timerEndTime = new Date(devTimer.MaxEndTimeIdle).getTime();
             const remaining = timerEndTime - currentTime;
+
             if (remaining > 0) {
               const timerRemaining = this.timeConversion(remaining, "timer");
               timer = { timer: timerRemaining, status: "Remaining" };
@@ -286,6 +300,8 @@ export default class App extends Component {
                 timerEndTime - new Date(devTimer.MaxStartTimeActive).getTime(),
                 "timer"
               );
+
+
               timer = { timer: timerDuration, status: "Finished" };
             }
           }
@@ -723,6 +739,7 @@ export default class App extends Component {
               hideProfile={this.hideProfile}
             />
             <Main
+              allJobsParts={this.state.allJobsParts}
               fetchData={this.fetchData}
               user={this.state.user}
               cells={this.state.cells}

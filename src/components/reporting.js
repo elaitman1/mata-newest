@@ -24,6 +24,7 @@ export default class Reporting extends Component {
     firstCellSelection: true,
     showConfirmation: false,
     prepCheckJobNum:0,
+    displayArrowDown:false,
   };
 
   componentDidMount = () => {
@@ -220,7 +221,10 @@ export default class Reporting extends Component {
   };
 
   renderCells = () => {
-    return Object.keys(this.state.cells).map((cell, idx) => {
+    return this.state.displayArrowDown?
+      ""
+    :
+    Object.keys(this.state.cells).map((cell, idx) => {
       // first cell when rendering component sets styling for blue border on the first cell
       const className =
         this.state.firstCellSelection && idx === 0 ? "cell selected" : "cell";
@@ -248,6 +252,10 @@ export default class Reporting extends Component {
     }else{
       await this.setState({prepCheckJobNum:this.state.prepCheckJobNum + 1})
     }
+  }
+
+  handleArrowDown = () => {
+    this.setState({displayArrowDown:!this.state.displayArrowDown})
   }
 
   renderTask = () => {
@@ -278,36 +286,66 @@ export default class Reporting extends Component {
         ""
       );
 
-      const checklistButtons = Object.keys(
-        this.state.cells[this.state.cellSelected]
-      ).map((checkList, idx) => (
-        <Button
-          key={idx}
-          type={checkList}
-          cell={this.state.cellSelected}
-          toggleChecklist={this.toggleChecklist}
-          bool={this.state.cells[this.state.cellSelected][checkList]}
-        />
-      ));
+    const handleDropDown = () =>{
+      if(this.state.displayArrowDown){
+        return <ul className='dropDownJobList'> {this.props.allJobsParts.map(jobPart =>{
+          let utc = new Date().toJSON()
+          utc = utc.slice(0,10).replace(new RegExp('/', 'g'), '-')
+          // if(jobPart["EditTime"].slice(0,10) === utc){
+          //   return <li>'yes'</li>
+          // }else{
+          // return<h2>No Jobs Taday</h2>
+        // }
+          if(jobPart["EditTime"].slice(0,10) === '2019-09-09'){
+              return <li>{jobPart.jobnumber}</li>
+            }}
+          )}
+        </ul>
+      }else{
+        return Object.keys(this.state.cells[this.state.cellSelected]).map((checkList, idx) =><Button
+              key={idx}
+              type={checkList}
+              cell={this.state.cellSelected}
+              toggleChecklist={this.toggleChecklist}
+              bool={this.state.cells[this.state.cellSelected][checkList]}
+            />
+          )
+      }
+    }
+
       return (
         <div>
           <div className="preparation-checklist-container">
             <h4>Reporting</h4>
             <h4>For Job# {" "}
-             {Object.keys(this.props.chats.Jobs)[this.state.prepCheckJobNum]}
-              <img
-                onClick={this.handleNextJob}
-                className="arrowRight"
-                src="./assets/arrowRight.png"
-                alt="arrowRight"
-              />
+            {this.state.displayArrowDown?
+              "____________"
+            :
+             Object.keys(this.props.chats.Jobs)[this.state.prepCheckJobNum]
+            }
+              {this.state.displayArrowDown?
+                <img
+                  onClick={this.handleArrowDown}
+                  className="arrowRight"
+                  src="./assets/arrowDown.png"
+                  alt="arrowDown"
+                />
+              :
+                <img
+                  onClick={this.handleArrowDown}
+                  className="arrowRight"
+                  src="./assets/arrowRight.png"
+                  alt="arrowRight"
+                />
+              }
+
             </h4>
                   <header className="preparation-checklist-cells-container">
                     {this.renderCells()}
                   </header>
                   <section className="preparation-checklist-body">
                     <div className="preparation-checklist-buttons-container">
-                      {checklistButtons}
+                    {handleDropDown()}
                     </div>
                     <button
                       className="form-submit-button"
@@ -322,6 +360,7 @@ export default class Reporting extends Component {
       );
     }
   };
+
 
   render = () => {
     return (
