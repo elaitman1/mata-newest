@@ -288,19 +288,20 @@ export default class Reporting extends Component {
 
     const handleDropDown = () =>{
       if(this.state.displayArrowDown){
-        return <ul className='dropDownJobList'> {this.props.allJobsParts.map(jobPart =>{
+        return <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}><ul style={{display:'flex', listStyleType: 'none', flexDirection:'column'}}> {this.props.allJobsParts.map(jobPart =>{
           let utc = new Date().toJSON()
           utc = utc.slice(0,10).replace(new RegExp('/', 'g'), '-')
           // if(jobPart["EditTime"].slice(0,10) === utc){
-          //   return <li>'yes'</li>
+          //   return <li>{jobPart.jobnumber}</li>
           // }else{
           // return<h2>No Jobs Taday</h2>
         // }
           if(jobPart["EditTime"].slice(0,10) === '2019-09-09'){
-              return <li>{jobPart.jobnumber}</li>
+              return <li style={{width: '192px',
+  marginBottom:'2em', marginLeft:'4em'}}>{jobPart.jobnumber}</li>
             }}
           )}
-        </ul>
+        </ul></div>
       }else{
         return Object.keys(this.state.cells[this.state.cellSelected]).map((checkList, idx) =><Button
               key={idx}

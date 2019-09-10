@@ -1559,5 +1559,5 @@ h1, h4, h5 {
 /* end of loading dots */
 .dropDownList{
   display:flex;
-  justify-content:flex-start;
+  justify-content:flex-end;
 }
