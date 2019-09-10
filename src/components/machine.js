@@ -15,6 +15,10 @@ export default class Machine extends Component {
     partNumber: ""
   };
 
+  changeCurrentJobNumber = async (jobNum) =>{
+    await this.setState({jobNumber:jobNum})
+  }
+
   displayTask = task => {
     return () => {
       this.setState({ selectedTask: task });
@@ -63,7 +67,10 @@ export default class Machine extends Component {
         />;
 
       case "Reporting":
-        return <Reporting chats={this.props.chats}
+        return <Reporting
+        jobNumber={this.state.jobNumber}
+        chats={this.props.chats}
+        changeCurrentJobNumber={this.changeCurrentJobNumber}
         allJobsParts={this.props.allJobsParts}
          machine={this.props.machine} saveReporting={this.props.saveReporting} hideTask={this.hideTask} />;
       case "Inspection":

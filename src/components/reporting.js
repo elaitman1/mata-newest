@@ -24,6 +24,7 @@ export default class Reporting extends Component {
     firstCellSelection: true,
     showConfirmation: false,
     prepCheckJobNum:0,
+    jobNumber:"",
     displayArrowDown:false,
   };
 
@@ -241,21 +242,14 @@ export default class Reporting extends Component {
     });
   };
 
-   handleNextJobNumber = async() => {
-     //  {Object.keys(this.props.chats.Jobs).map((jobNumber, idx)=>{
-     //   return<ul className="listJobNumber">
-     //  <li key={idx}>{jobNumber}</li>
-     //   </ul>
-     // })}
-    if (this.state.prepCheckJobNum >= Object.keys(this.props.chats.Jobs).length - 1){
-      await this.setState({prepCheckJobNum:0})
-    }else{
-      await this.setState({prepCheckJobNum:this.state.prepCheckJobNum + 1})
-    }
-  }
-
   handleArrowDown = () => {
     this.setState({displayArrowDown:!this.state.displayArrowDown})
+  }
+
+  handleJobNumberClicked = async(e) => {
+    await this.props.changeCurrentJobNumber(e.target.innerText)
+    this.handleArrowDown()
+
   }
 
   renderTask = () => {
@@ -297,7 +291,7 @@ export default class Reporting extends Component {
           // return<h2>No Jobs Taday</h2>
         // }
           if(jobPart["EditTime"].slice(0,10) === '2019-09-09'){
-              return <li style={{width: '192px',
+              return <li onClick={this.handleJobNumberClicked} style={{width: '192px',
   marginBottom:'2em', marginLeft:'4em'}}>{jobPart.jobnumber}</li>
             }}
           )}
@@ -322,7 +316,7 @@ export default class Reporting extends Component {
             {this.state.displayArrowDown?
               "____________"
             :
-             Object.keys(this.props.chats.Jobs)[this.state.prepCheckJobNum]
+             this.props.jobNumber
             }
               {this.state.displayArrowDown?
                 <img
