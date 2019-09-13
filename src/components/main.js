@@ -27,7 +27,6 @@ const Main = props => {
       );
     } else {
       if (!props.machineSelected) {
-
         return (
           <Feed
             cells={props.cells}

@@ -21,11 +21,12 @@ export default class Reporting extends Component {
     prevCell: null,
     displayNote: false,
     prevNote: "",
-    firstCellSelection: true,
+    firstCellSelection: false,
     showConfirmation: false,
     prepCheckJobNum:0,
     jobNumber:"",
     displayArrowDown:false,
+    errorModal:false,
   };
 
   componentDidMount = () => {
@@ -92,6 +93,31 @@ export default class Reporting extends Component {
     this.setState({ showConfirmation: !this.state.showConfirmation });
   };
 
+  handleErrorModal = () => {
+    this.setState({errorModal:false})
+  }
+
+
+  errorModal = () =>{
+    if(this.state.errorModal){
+      return(
+        <span className="start-job-modal-overlay">
+          <div className="start-job-modal-container">
+            <p>Please Choose Job #</p>
+            <button
+              className="form-submit-button"
+              onClick={this.handleErrorModal}
+            >
+              Ok
+            </button>
+          </div>
+        </span>
+      )
+    }else{
+      return ""
+    }
+  }
+
   saveChecklistValues = async () => {
     const url =
       "https://www.matainventive.com/cordovaserver/database/insertprepall.php";
@@ -140,6 +166,9 @@ export default class Reporting extends Component {
   };
 
   handleSaveChecklist = () => {
+    this.state.jobNumber === ""?
+      this.setState({errorModal:true})
+    :
     this.saveChecklistValues().then(res => {
       console.log(res);
       this.props.saveReporting(
@@ -168,7 +197,7 @@ export default class Reporting extends Component {
       deviceid: this.props.machine.device_id,
       note: this.state.cells.Note,
       partnumber: "",
-      jobnumber: ""
+      jobnumber: this.state.jobNumber
     };
 
     fetch(url, {
@@ -187,13 +216,16 @@ export default class Reporting extends Component {
         "&insert=",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
-      .then(res => console.log(res))
       .then(response => console.log("Success:", JSON.stringify(response)))
       .catch(error => console.error("Error:", error));
-  };
+    };
 
   // after saving Note, switch back to the previous cell view that the user was at before displaying Note
   saveNote = () => {
+    if(this.state.jobNumber === ""){
+      return this.setState({displayNote:false, errorModal:true})
+    }
+
     this.postNote().then(res => {
       console.log(res);
       document.getElementById(this.state.cellSelected).className = "cell";
@@ -246,10 +278,10 @@ export default class Reporting extends Component {
     this.setState({displayArrowDown:!this.state.displayArrowDown})
   }
 
-  handleJobNumberClicked = async(e) => {
-    await this.props.changeCurrentJobNumber(e.target.innerText)
+  handleJobNumberClicked = (e) => {
+    this.props.changeCurrentJobNumber(e.target.innerText)
     this.handleArrowDown()
-
+    //figure out where the buttons are getting their info from
   }
 
   renderTask = () => {
@@ -262,7 +294,13 @@ export default class Reporting extends Component {
         />
       );
     } else {
-      const note = this.state.displayNote ? (
+      const errorModal = this.state.errorModal? (
+        this.errorModal()
+      ) : (
+        ""
+      )
+      const note =
+        this.state.displayNote?(
         <div>
           <div
             className="preparation-checklist-note-overlay"
@@ -278,33 +316,38 @@ export default class Reporting extends Component {
         </div>
       ) : (
         ""
-      );
+      )
 
     const handleDropDown = () =>{
       if(this.state.displayArrowDown){
-        return <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}><ul style={{display:'flex', listStyleType: 'none', flexDirection:'column'}}> {this.props.allJobsParts.map(jobPart =>{
-          let utc = new Date().toJSON()
-          utc = utc.slice(0,10).replace(new RegExp('/', 'g'), '-')
-          // if(jobPart["EditTime"].slice(0,10) === utc){
-          //   return <li>{jobPart.jobnumber}</li>
-          // }else{
-          // return<h2>No Jobs Taday</h2>
-        // }
-          if(jobPart["EditTime"].slice(0,10) === '2019-09-09'){
-              return <li onClick={this.handleJobNumberClicked} style={{width: '192px',
-  marginBottom:'2em', marginLeft:'4em'}}>{jobPart.jobnumber}</li>
-            }}
-          )}
-        </ul></div>
-      }else{
-        return Object.keys(this.state.cells[this.state.cellSelected]).map((checkList, idx) =><Button
+        return <div className="reportingJobNumberDropdownContainer">
+        <ul className='reportingJobNumberDropdownUl'>
+        {this.props.allJobsParts.map(jobPart =>{
+          if(this.props.machine.device_id === jobPart.device_id){
+            let utc = new Date().toJSON()
+            utc = utc.slice(0,10).replace(new RegExp('/', 'g'), '-')
+
+              if(jobPart["EditTime"].slice(0,10) === utc){
+                return <li className='reportingJobNumberDropdownli'
+                  onClick={this.handleJobNumberClicked}
+                  >
+                    {jobPart.jobnumber}
+                </li>
+              }
+            } else {
+              return ""
+            }})}
+          </ul></div>
+      } else {
+        return Object.keys(this.state.cells[this.state.cellSelected]).map((checkList, idx) =>{
+          return  <Button
               key={idx}
               type={checkList}
               cell={this.state.cellSelected}
               toggleChecklist={this.toggleChecklist}
               bool={this.state.cells[this.state.cellSelected][checkList]}
             />
-          )
+          })
       }
     }
 
@@ -336,6 +379,7 @@ export default class Reporting extends Component {
 
             </h4>
                   <header className="preparation-checklist-cells-container">
+
                     {this.renderCells()}
                   </header>
                   <section className="preparation-checklist-body">
@@ -348,6 +392,7 @@ export default class Reporting extends Component {
                     >
                       Save
                     </button>
+                    {errorModal}
                     {note}
                   </section>
                 </div>

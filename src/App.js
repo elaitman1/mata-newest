@@ -44,7 +44,6 @@ export default class App extends Component {
     displayProfile: null,
     jobs:[],
     allJobsParts:[]
-
   };
 
   countDown = 0;
@@ -206,7 +205,7 @@ export default class App extends Component {
     const jobsParts = await this.fetchData(jobsPartsUrl).then(
       jobsPartsData => jobsPartsData
     );
-    
+
     this.setState({allJobsParts: jobsParts})
     const reportingUrl = `https://www.matainventive.com/cordovaserver/database/jsonmataPrepAll.php?id=${id}`;
     const reporting = await this.fetchData(reportingUrl).then(
@@ -403,7 +402,7 @@ export default class App extends Component {
     });
 
     return dataArr;
-  };
+  }; //end of load data
 
   createDeviceObject = devicesArr => {
     const vibDataObj = this.createObjectWithIDKeys(devicesArr[0]);
@@ -707,7 +706,6 @@ export default class App extends Component {
   };
 
   render = () => {
-
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} chats={this.state.chats}/>;
     } else {

@@ -72,7 +72,7 @@ export default class Machine extends Component {
         chats={this.props.chats}
         changeCurrentJobNumber={this.changeCurrentJobNumber}
         allJobsParts={this.props.allJobsParts}
-         machine={this.props.machine} saveReporting={this.props.saveReporting} hideTask={this.hideTask} />;
+        machine={this.props.machine} saveReporting={this.props.saveReporting} hideTask={this.hideTask} />;
       case "Inspection":
         return <Inspection machine={this.props.machine} hideTask={this.hideTask} />;
       case "Timer":
