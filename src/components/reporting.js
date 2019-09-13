@@ -222,8 +222,11 @@ export default class Reporting extends Component {
 
   // after saving Note, switch back to the previous cell view that the user was at before displaying Note
   saveNote = () => {
+    debugger
     if(this.state.jobNumber === ""){
       return this.setState({displayNote:false, errorModal:true})
+    }else{
+      this.setState({displayNote:true, errorModal:false})
     }
 
     this.postNote().then(res => {
@@ -279,9 +282,9 @@ export default class Reporting extends Component {
   }
 
   handleJobNumberClicked = (e) => {
+    this.setState({jobNumber:e.target.innerText})
     this.props.changeCurrentJobNumber(e.target.innerText)
     this.handleArrowDown()
-    //figure out where the buttons are getting their info from
   }
 
   renderTask = () => {
