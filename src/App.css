@@ -1557,3 +1557,29 @@ h1, h4, h5 {
       .5em 0 0 white;}
 }
 /* end of loading dots */
+
+.reportingJobNumberDropdownContainer{
+  position: absolute;
+}
+
+.reportingJobNumberDropdownUl{
+  margin: -3em 10px;
+  display: flex;
+  flex-direction: column;
+  height: 40vh;
+  overflow-y: hidden;
+  overflow: scroll;
+}
+
+.reportingJobNumberDropdownli{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  margin: 1.5em;
+  padding-left: 3em;
+  border-radius: 5px;
+  cursor: pointer;
+  font-stretch: expanded;
+  /* transform: scale(1.5, 1.5) */
+}

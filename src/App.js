@@ -43,7 +43,7 @@ export default class App extends Component {
     displayChat: null,
     displayProfile: null,
     jobs:[],
-    latestJob: {"job":"","part":""},
+    allJobsParts:[]
   };
 
   countDown = 0;
@@ -60,6 +60,7 @@ export default class App extends Component {
 
   // converts Date.now() milliseconds into the time, in the appropriate measurement, since the message was sent
   timeConversion = (millisec, type) => {
+
     if (type === "timer") {
       let seconds = Math.ceil(millisec / 1000);
       const hours = Math.floor(seconds / 3600);
@@ -75,6 +76,7 @@ export default class App extends Component {
       const minutes = (millisec / (1000 * 60)).toFixed(0);
       const hours = (millisec / (1000 * 60 * 60)).toFixed(0);
       if (seconds < 60) {
+
         return seconds + " Sec";
       } else if (minutes < 60) {
         const mins = parseInt(minutes) === 1 ? " Min" : " Mins";
@@ -88,6 +90,7 @@ export default class App extends Component {
 
   countDownTimers = () => {
     let timers = [];
+
     const cells = Object.keys(this.state.cells);
     for (let i = 0; i < cells.length; i++) {
       const cell = this.state.cells[cells[i]];
@@ -202,6 +205,8 @@ export default class App extends Component {
     const jobsParts = await this.fetchData(jobsPartsUrl).then(
       jobsPartsData => jobsPartsData
     );
+
+    this.setState({allJobsParts: jobsParts})
     const reportingUrl = `https://www.matainventive.com/cordovaserver/database/jsonmataPrepAll.php?id=${id}`;
     const reporting = await this.fetchData(reportingUrl).then(
       reportingData => reportingData
@@ -209,7 +214,6 @@ export default class App extends Component {
     const prepNotesUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatanotes.php?id=${id}`;
     const prepNotes = await this.fetchData(prepNotesUrl).then(prepNotesData => prepNotesData);
     const timersUrl = `https://www.matainventive.com/cordovaserver/database/jsonmataSensorBasic.php?id=${id}`;
-    ///timers takes a long time///////////////////////////////
     const timers = await this.fetchData(timersUrl).then(timerData => timerData);
     const chatHistoryUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatachat.php?id=${id}`;
     const chatHistory = await this.fetchData(chatHistoryUrl).then(
@@ -234,6 +238,7 @@ export default class App extends Component {
       chatHistory,
       inspectHistory
     ]).then(data => {
+
       const user = data[0];
       const notifications = data[1];
       const cells = data[2];
@@ -261,8 +266,11 @@ export default class App extends Component {
           device => device.cell_id === cell.cell_id
         );
         let cellDevsObj = {};
+
         cellDevices.forEach(cellDev => {
+
           const id = cellDev.device_id;
+
           const devObj = devicesDetails[id];
 
           if (typeof devObj === "undefined") {
@@ -289,6 +297,7 @@ export default class App extends Component {
             cellDev["timerStart"] = devTimer.MaxStartTimeActive;
             const timerEndTime = new Date(devTimer.MaxEndTimeIdle).getTime();
             const remaining = timerEndTime - currentTime;
+
             if (remaining > 0) {
               const timerRemaining = this.timeConversion(remaining, "timer");
               timer = { timer: timerRemaining, status: "Remaining" };
@@ -301,6 +310,8 @@ export default class App extends Component {
                 timerEndTime - new Date(devTimer.MaxStartTimeActive).getTime(),
                 "timer"
               );
+
+
               timer = { timer: timerDuration, status: "Finished" };
             }
           }
@@ -442,7 +453,7 @@ export default class App extends Component {
     });
 
     return dataArr;
-  };
+  }; //end of load data
 
   createDeviceObject = devicesArr => {
     const vibDataObj = this.createObjectWithIDKeys(devicesArr[0]);
@@ -746,7 +757,6 @@ export default class App extends Component {
   };
 
   render = () => {
-
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} chats={this.state.chats}/>;
     } else {
@@ -778,6 +788,7 @@ export default class App extends Component {
               hideProfile={this.hideProfile}
             />
             <Main
+              allJobsParts={this.state.allJobsParts}
               fetchData={this.fetchData}
               user={this.state.user}
               cells={this.state.cells}

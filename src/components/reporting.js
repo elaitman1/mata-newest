@@ -21,36 +21,42 @@ export default class Reporting extends Component {
     prevCell: null,
     displayNote: false,
     prevNote: "",
-    firstCellSelection: true,
+    firstCellSelection: false,
     showConfirmation: false,
     prepCheckJobNum:0,
+    jobNumber:"",
+    displayArrowDown:false,
+    errorModal:false,
   };
 
-  componentDidMount = () => {
-    const reportingDict = {
-      clean: ["Machining", "Clean Chamber"],
-      offset: ["Machining", "Setup Job"],
-      inspection: ["Machining", "Inspection Room"],
-      speccheck: ["Preparation", "Job Spec Confirmation"],
-      cadwork: ["Preparation", "Revise CAD Modeling"],
-      toolpath: ["Preparation", "Edit Toolpath"]
-    };
+  // componentDidMount = () => {
+    // const reportingDict = {
+    //   clean: ["Machining", "Clean Chamber"],
+    //   offset: ["Machining", "Clear Alarm"],
+    //   inspection: ["Machining", "Inspection Room"],
+    //   speccheck: ["Preparation", "Job Spec Confirmation"],
+    //   cadwork: ["Preparation", "Revise CAD Modeling"],
+    //   toolpath: ["Preparation", "Edit Toolpath"]
+    // };
 
-    let reportingObj = { Machining: {}, Preparation: {} };
-    Object.keys(this.props.machine.reporting).forEach(prepType => {
-      let prepVal = this.props.machine.reporting[prepType];
-      if (prepType !== "jobnumber" && prepType !== "partnumber"){
-        if (prepType === "notes") {
-          reportingObj.Note = prepVal;
-        } else {
-          prepVal = this.handleEmptyString(prepVal);
-          const stateKeys = reportingDict[prepType];
-          reportingObj[stateKeys[0]][stateKeys[1]] = prepVal;
-        }
-      }
-    });
-    this.setState({ cells: reportingObj, prevNote: reportingObj.Note });
-  };
+    // fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataPrepAll.php?id=${this.props.user.ID}`)
+
+
+    // let reportingObj = { Machining: {}, Preparation: {} };
+    // Object.keys(this.props.machine.reporting).forEach(prepType => {
+    //   let prepVal = this.props.machine.reporting[prepType];
+    //   if (prepType !== "jobnumber" && prepType !== "partnumber"){
+    //     if (prepType === "notes") {
+    //       reportingObj.Note = prepVal;
+    //     } else {
+    //       prepVal = this.handleEmptyString(prepVal);
+    //       const stateKeys = reportingDict[prepType];
+    //       reportingObj[stateKeys[0]][stateKeys[1]] = prepVal;
+    //     }
+    //   }
+    // });
+    // this.setState({ cells: reportingObj, prevNote: reportingObj.Note });
+  // };
 
   handleEmptyString = str => {
     if (typeof str === "string") {
@@ -89,6 +95,30 @@ export default class Reporting extends Component {
   toggleConfirmation = () => {
     this.setState({ showConfirmation: !this.state.showConfirmation });
   };
+
+  handleErrorModal = () => {
+    this.setState({errorModal:false})
+  }
+
+  errorModal = () =>{
+    if(this.state.errorModal){
+      return(
+        <span className="start-job-modal-overlay">
+          <div className="start-job-modal-container">
+            <p>Please Choose Job #</p>
+            <button
+              className="form-submit-button"
+              onClick={this.handleErrorModal}
+            >
+              Ok
+            </button>
+          </div>
+        </span>
+      )
+    }else{
+      return ""
+    }
+  }
 
   saveChecklistValues = async () => {
     const url =
@@ -138,6 +168,9 @@ export default class Reporting extends Component {
   };
 
   handleSaveChecklist = () => {
+    this.state.jobNumber === ""?
+      this.setState({errorModal:true})
+    :
     this.saveChecklistValues().then(res => {
       console.log(res);
       this.props.saveReporting(
@@ -166,7 +199,7 @@ export default class Reporting extends Component {
       deviceid: this.props.machine.device_id,
       note: this.state.cells.Note,
       partnumber: "",
-      jobnumber: this.props.latestJob["job"]
+      jobnumber: this.state.jobNumber
     };
 
     fetch(url, {
@@ -185,13 +218,17 @@ export default class Reporting extends Component {
         "&insert=",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
-      .then(res => console.log(res))
-      .then(response => console.log("Success:", Object.keys(this.props.chats.Jobs)))
+      .then(response => console.log("Success:", JSON.stringify(response)))
       .catch(error => console.error("Error:", error));
-  };
+    };
 
   // after saving Note, switch back to the previous cell view that the user was at before displaying Note
   saveNote = () => {
+    if(this.state.jobNumber === ""){
+      return this.setState({displayNote:false, errorModal:true})
+    }else{
+      this.setState({displayNote:true, errorModal:false})
+    }
     this.postNote().then(res => {
       console.log(res);
       document.getElementById(this.state.cellSelected).className = "cell";
@@ -220,8 +257,12 @@ export default class Reporting extends Component {
   };
 
   renderCells = () => {
-    return Object.keys(this.state.cells).map((cell, idx) => {
+    return this.state.displayArrowDown?
+      ""
+    :
+    Object.keys(this.state.cells).map((cell, idx) => {
       // first cell when rendering component sets styling for blue border on the first cell
+
       const className =
         this.state.firstCellSelection && idx === 0 ? "cell selected" : "cell";
       return (
@@ -237,16 +278,44 @@ export default class Reporting extends Component {
     });
   };
 
-   handleNextJobNumber = async() => {
-     //  {Object.keys(this.props.chats.Jobs).map((jobNumber, idx)=>{
-     //   return<ul className="listJobNumber">
-     //  <li key={idx}>{jobNumber}</li>
-     //   </ul>
-     // })}
-    if (this.state.prepCheckJobNum >= Object.keys(this.props.chats.Jobs).length - 1){
-      await this.setState({prepCheckJobNum:0})
+  handleArrowDown = () => {
+    this.setState({displayArrowDown:!this.state.displayArrowDown})
+  }
+
+  handleJobNumberClicked = (e) => {
+    this.setState({jobNumber:e.target.innerText})
+    fetch(`https://www.matainventive.com/cordovaserver/database/jsonmatanotes.php?id=${this.props.user.ID}`)
+    .then(r=>r.json())
+    .then(r=>{
+      let found = r.find(element => {
+        return element.jobnumber === this.state.jobNumber.toString() && element.device_id === this.props.machine.device_id
+    })
+      if (found !== undefined){
+        let foundNote = found.note
+        this.setState({ cells: { ...this.state.cells, Note: foundNote} })
+      }
+    })
+    this.props.changeCurrentJobNumber(e.target.innerText)
+    this.handleArrowDown()
+  }
+
+  note = () => {
+    if(this.state.displayNote){
+      return <div>
+        <div
+          className="preparation-checklist-note-overlay"
+          onClick={this.closeNote}
+        />
+        <div className="preparation-checklist-note-container">
+          <h5>Add Note</h5>
+          <textarea value={this.state.cells.Note} onChange={this.update} />
+          <button className="form-submit-button" onClick={this.saveNote}>
+            Save
+          </button>
+        </div>
+      </div>
     }else{
-      await this.setState({prepCheckJobNum:this.state.prepCheckJobNum + 1})
+      return ""
     }
   }
 
@@ -260,48 +329,88 @@ export default class Reporting extends Component {
         />
       );
     } else {
-      const note = this.state.displayNote ? (
-        <div>
-          <div
-            className="preparation-checklist-note-overlay"
-            onClick={this.closeNote}
-          />
-          <div className="preparation-checklist-note-container">
-            <h5>Add Note</h5>
-            <textarea value={this.state.cells.Note} onChange={this.update} />
-            <button className="form-submit-button" onClick={this.saveNote}>
-              Save
-            </button>
-          </div>
-        </div>
+      const errorModal = this.state.errorModal? (
+        this.errorModal()
       ) : (
         ""
-      );
+      )
 
-      const checklistButtons = Object.keys(
-        this.state.cells[this.state.cellSelected]
-      ).map((checkList, idx) => (
-        <Button
-          key={idx}
-          type={checkList}
-          cell={this.state.cellSelected}
-          toggleChecklist={this.toggleChecklist}
-          bool={this.state.cells[this.state.cellSelected][checkList]}
-        />
-      ));
+    const handleDropDown = () =>{
+      if(this.state.displayArrowDown){
+        return <div className="reportingJobNumberDropdownContainer">
+        <ul className='reportingJobNumberDropdownUl'>
+        {this.props.allJobsParts.map(jobPart =>{
+          if(this.props.machine.device_id === jobPart.device_id){
+      ////////////////////////////////////////////////////////////////////////utc date created
+            var date = new Date();
+            var now_utc =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+            date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+            let utcDate = new Date(now_utc).toString().slice(4,15)
+          ////////////////////////////////////////////////////////////////////////Application date changed to utc
+            let s = jobPart["EditTime"].slice(0,10)
+            let newS = [s[5],s[6]," ",s[8],s[9]," ",s[0],s[1],s[2],s[3]]
+            let newSMonth = parseInt([newS[0],newS[1]].join(''))
+            let months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            let newSWordMonth = months[newSMonth]
+            let applicationDateToUTC = [newSWordMonth,' ',newS[3],newS[4],newS[5],newS[6],newS[7],newS[8],newS[9]].join('')
+
+              if(applicationDateToUTC === utcDate){
+                return <li className='reportingJobNumberDropdownli'
+                  onClick={this.handleJobNumberClicked}
+                  >
+                    {jobPart.jobnumber}
+                </li>
+              }
+            } else {
+              return ""
+            }})}
+          </ul></div>
+      } else {
+        return Object.keys(this.state.cells[this.state.cellSelected]).map((checkList, idx) =>{
+          return  <Button
+              key={idx}
+              type={checkList}
+              cell={this.state.cellSelected}
+              toggleChecklist={this.toggleChecklist}
+              bool={this.state.cells[this.state.cellSelected][checkList]}
+            />
+          })
+      }
+    }
+
       return (
         <div>
           <div className="preparation-checklist-container">
             <h4>Reporting</h4>
             <h4>For Job# {" "}
-             {this.props.latestJob["job"]}
+            {this.state.displayArrowDown?
+              "____________"
+            :
+             this.state.jobNumber
+            }
+              {this.state.displayArrowDown?
+                <img
+                  onClick={this.handleArrowDown}
+                  className="arrowRight"
+                  src="./assets/arrowDown.png"
+                  alt="arrowDown"
+                />
+              :
+                <img
+                  onClick={this.handleArrowDown}
+                  className="arrowRight"
+                  src="./assets/arrowRight.png"
+                  alt="arrowRight"
+                />
+              }
+
             </h4>
                   <header className="preparation-checklist-cells-container">
                     {this.renderCells()}
                   </header>
                   <section className="preparation-checklist-body">
                     <div className="preparation-checklist-buttons-container">
-                      {checklistButtons}
+                    {handleDropDown()}
                     </div>
                     <button
                       className="form-submit-button"
@@ -309,13 +418,15 @@ export default class Reporting extends Component {
                     >
                       Save
                     </button>
-                    {note}
+                    {errorModal}
+                    {this.note()}
                   </section>
                 </div>
               </div>
       );
     }
   };
+
 
   render = () => {
     return (
