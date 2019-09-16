@@ -46,6 +46,8 @@ export default class App extends Component {
     allJobsParts:[]
   };
 
+
+
   countDown = 0;
 
   componentDidMount = () => {
@@ -298,8 +300,6 @@ export default class App extends Component {
                 timerEndTime - new Date(devTimer.MaxStartTimeActive).getTime(),
                 "timer"
               );
-
-
               timer = { timer: timerDuration, status: "Finished" };
             }
           }
@@ -399,9 +399,8 @@ export default class App extends Component {
 
       return [userObj, cellObj, chatObj];
     });
-
     return dataArr;
-  }; //end of load data
+  }; /////////////////////////end of load data
 
   createDeviceObject = devicesArr => {
     const vibDataObj = this.createObjectWithIDKeys(devicesArr[0]);
@@ -500,7 +499,6 @@ export default class App extends Component {
         };
       }
     });
-
     this.setState({ chats: newChats });
   };
 
@@ -713,7 +711,6 @@ export default class App extends Component {
         <div className="splash">
         <img src="./assets/splash.png" alt="Splash Logo" />
         <h2 className='loading' style={{color:"white"}}>Loading</h2>
-
         </div>
         :
         <div className="app-container">
