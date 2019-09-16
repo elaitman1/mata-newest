@@ -29,31 +29,34 @@ export default class Reporting extends Component {
     errorModal:false,
   };
 
-  componentDidMount = () => {
-    const reportingDict = {
-      clean: ["Machining", "Clean Chamber"],
-      offset: ["Machining", "Clear Alarm"],
-      inspection: ["Machining", "Inspection Room"],
-      speccheck: ["Preparation", "Job Spec Confirmation"],
-      cadwork: ["Preparation", "Revise CAD Modeling"],
-      toolpath: ["Preparation", "Edit Toolpath"]
-    };
+  // componentDidMount = () => {
+    // const reportingDict = {
+    //   clean: ["Machining", "Clean Chamber"],
+    //   offset: ["Machining", "Clear Alarm"],
+    //   inspection: ["Machining", "Inspection Room"],
+    //   speccheck: ["Preparation", "Job Spec Confirmation"],
+    //   cadwork: ["Preparation", "Revise CAD Modeling"],
+    //   toolpath: ["Preparation", "Edit Toolpath"]
+    // };
 
-    let reportingObj = { Machining: {}, Preparation: {} };
-    Object.keys(this.props.machine.reporting).forEach(prepType => {
-      let prepVal = this.props.machine.reporting[prepType];
-      if (prepType !== "jobnumber" && prepType !== "partnumber"){
-        if (prepType === "notes") {
-          reportingObj.Note = prepVal;
-        } else {
-          prepVal = this.handleEmptyString(prepVal);
-          const stateKeys = reportingDict[prepType];
-          reportingObj[stateKeys[0]][stateKeys[1]] = prepVal;
-        }
-      }
-    });
-    this.setState({ cells: reportingObj, prevNote: reportingObj.Note });
-  };
+    // fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataPrepAll.php?id=${this.props.user.ID}`)
+
+
+    // let reportingObj = { Machining: {}, Preparation: {} };
+    // Object.keys(this.props.machine.reporting).forEach(prepType => {
+    //   let prepVal = this.props.machine.reporting[prepType];
+    //   if (prepType !== "jobnumber" && prepType !== "partnumber"){
+    //     if (prepType === "notes") {
+    //       reportingObj.Note = prepVal;
+    //     } else {
+    //       prepVal = this.handleEmptyString(prepVal);
+    //       const stateKeys = reportingDict[prepType];
+    //       reportingObj[stateKeys[0]][stateKeys[1]] = prepVal;
+    //     }
+    //   }
+    // });
+    // this.setState({ cells: reportingObj, prevNote: reportingObj.Note });
+  // };
 
   handleEmptyString = str => {
     if (typeof str === "string") {
@@ -96,7 +99,6 @@ export default class Reporting extends Component {
   handleErrorModal = () => {
     this.setState({errorModal:false})
   }
-
 
   errorModal = () =>{
     if(this.state.errorModal){
@@ -212,7 +214,7 @@ export default class Reporting extends Component {
         "&partnumber=" +
         data.partnumber +
         "&jobnumber=" +
-        data.jobnumbernote +
+        data.jobnumber +
         "&insert=",
       headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
@@ -222,13 +224,11 @@ export default class Reporting extends Component {
 
   // after saving Note, switch back to the previous cell view that the user was at before displaying Note
   saveNote = () => {
-    debugger
     if(this.state.jobNumber === ""){
       return this.setState({displayNote:false, errorModal:true})
     }else{
       this.setState({displayNote:true, errorModal:false})
     }
-
     this.postNote().then(res => {
       console.log(res);
       document.getElementById(this.state.cellSelected).className = "cell";
@@ -262,6 +262,7 @@ export default class Reporting extends Component {
     :
     Object.keys(this.state.cells).map((cell, idx) => {
       // first cell when rendering component sets styling for blue border on the first cell
+
       const className =
         this.state.firstCellSelection && idx === 0 ? "cell selected" : "cell";
       return (
@@ -283,8 +284,39 @@ export default class Reporting extends Component {
 
   handleJobNumberClicked = (e) => {
     this.setState({jobNumber:e.target.innerText})
+    fetch(`https://www.matainventive.com/cordovaserver/database/jsonmatanotes.php?id=${this.props.user.ID}`)
+    .then(r=>r.json())
+    .then(r=>{
+      let found = r.find(element => {
+        return element.jobnumber === this.state.jobNumber.toString() && element.device_id === this.props.machine.device_id
+    })
+      if (found !== undefined){
+        let foundNote = found.note
+        this.setState({ cells: { ...this.state.cells, Note: foundNote} })
+      }
+    })
     this.props.changeCurrentJobNumber(e.target.innerText)
     this.handleArrowDown()
+  }
+
+  note = () => {
+    if(this.state.displayNote){
+      return <div>
+        <div
+          className="preparation-checklist-note-overlay"
+          onClick={this.closeNote}
+        />
+        <div className="preparation-checklist-note-container">
+          <h5>Add Note</h5>
+          <textarea value={this.state.cells.Note} onChange={this.update} />
+          <button className="form-submit-button" onClick={this.saveNote}>
+            Save
+          </button>
+        </div>
+      </div>
+    }else{
+      return ""
+    }
   }
 
   renderTask = () => {
@@ -299,24 +331,6 @@ export default class Reporting extends Component {
     } else {
       const errorModal = this.state.errorModal? (
         this.errorModal()
-      ) : (
-        ""
-      )
-      const note =
-        this.state.displayNote?(
-        <div>
-          <div
-            className="preparation-checklist-note-overlay"
-            onClick={this.closeNote}
-          />
-          <div className="preparation-checklist-note-container">
-            <h5>Add Note</h5>
-            <textarea value={this.state.cells.Note} onChange={this.update} />
-            <button className="form-submit-button" onClick={this.saveNote}>
-              Save
-            </button>
-          </div>
-        </div>
       ) : (
         ""
       )
@@ -362,7 +376,7 @@ export default class Reporting extends Component {
             {this.state.displayArrowDown?
               "____________"
             :
-             this.props.jobNumber
+             this.state.jobNumber
             }
               {this.state.displayArrowDown?
                 <img
@@ -382,7 +396,6 @@ export default class Reporting extends Component {
 
             </h4>
                   <header className="preparation-checklist-cells-container">
-
                     {this.renderCells()}
                   </header>
                   <section className="preparation-checklist-body">
@@ -396,7 +409,7 @@ export default class Reporting extends Component {
                       Save
                     </button>
                     {errorModal}
-                    {note}
+                    {this.note()}
                   </section>
                 </div>
               </div>

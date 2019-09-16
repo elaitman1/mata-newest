@@ -57,7 +57,8 @@ export default class Machine extends Component {
     }
     switch (this.state.selectedTask) {
       case "Start Job":
-        return <StartJob jobNumber={this.state.jobNumber}
+        return <StartJob
+        jobNumber={this.state.jobNumber}
         toggleCamera={this.toggleCamera}
         saveNewJob={this.props.saveNewJob}
         cameraView={this.state.cameraView}
@@ -68,6 +69,7 @@ export default class Machine extends Component {
 
       case "Reporting":
         return <Reporting
+        user={this.props.user}
         jobNumber={this.state.jobNumber}
         chats={this.props.chats}
         changeCurrentJobNumber={this.changeCurrentJobNumber}

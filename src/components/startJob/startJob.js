@@ -92,6 +92,7 @@ export default class StartJob extends Component {
   };
 
   insertJob = async idx => {
+    debugger
     const url = "https://www.matainventive.com/cordovaserver/database/insertjob.php";
     const data = {
       userid: JSON.parse(localStorage.getItem("Mata Inventive")).ID,
@@ -111,49 +112,49 @@ export default class StartJob extends Component {
 
     /////////////////////////////////////////////////////////////////////added to this endpoint this way I have access to the job number, the device id and the prepcheck list values so that when reporting checklist buttons are clicked i can sort through each device by the job number. they all start out false.
 
-    const urlTwo = "https://www.matainventive.com/cordovaserver/database/insertprepall.php";
-    const dataTwo = {
-      userid: JSON.parse(localStorage.getItem("Mata Inventive")).ID,
-      deviceid: this.props.machine.device_id,
-      prepspec: true,
-      prepcad: true,
-      preppath: true,
-      prepreporting: true,
-      prepclean: true,
-      partnumber: this.state.jobs[idx].inputValues.partNumber,
-      jobnumber: this.state.jobs[idx].inputValues.jobNumber,
-      inspection: true
-    };
-
-    fetch(urlTwo, {
-      method: "POST",
-      body:
-        "userid=" +
-        dataTwo.userid +
-        "&deviceid=" +
-        dataTwo.deviceid +
-        "&prepspec=" +
-        dataTwo.prepspec +
-        "&prepcad=" +
-        dataTwo.prepcad +
-        "&preppath=" +
-        dataTwo.preppath +
-        "&prepoffset=" +
-        dataTwo.prepreporting +
-        "&prepclean=" +
-        dataTwo.prepclean +
-        "&partnumber=" +
-        dataTwo.partnumber +
-        "&jobnumber=" +
-        dataTwo.jobnumber +
-        "&inspection=" +
-        dataTwo.inspection +
-        "&insert=",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-      .then(res => console.log(res))
-      .then(response => console.log("Success:", JSON.stringify(response)))
-      .catch(error => console.error("Error:", error));
+    // const urlTwo = "https://www.matainventive.com/cordovaserver/database/insertprepall.php";
+    // const dataTwo = {
+    //   userid: JSON.parse(localStorage.getItem("Mata Inventive")).ID,
+    //   deviceid: this.props.machine.device_id,
+    //   prepspec: false,
+    //   prepcad: false,
+    //   preppath: false,
+    //   prepreporting: false,
+    //   prepclean: false,
+    //   partnumber: this.state.jobs[idx].inputValues.partNumber,
+    //   jobnumber: this.state.jobs[idx].inputValues.jobNumber,
+    //   inspection: false
+    // };
+    //
+    // fetch(urlTwo, {
+    //   method: "POST",
+    //   body:
+    //     "userid=" +
+    //     dataTwo.userid +
+    //     "&deviceid=" +
+    //     dataTwo.deviceid +
+    //     "&prepspec=" +
+    //     dataTwo.prepspec +
+    //     "&prepcad=" +
+    //     dataTwo.prepcad +
+    //     "&preppath=" +
+    //     dataTwo.preppath +
+    //     "&prepoffset=" +
+    //     dataTwo.prepreporting +
+    //     "&prepclean=" +
+    //     dataTwo.prepclean +
+    //     "&partnumber=" +
+    //     dataTwo.partnumber +
+    //     "&jobnumber=" +
+    //     dataTwo.jobnumber +
+    //     "&inspection=" +
+    //     dataTwo.inspection +
+    //     "&insert=",
+    //   headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    // })
+    //   .then(res => console.log(res))
+    //   .then(response => console.log("Success:", JSON.stringify(response)))
+    //   .catch(error => console.error("Error:", error));
   };
 
   postAllJobs = async () => {

@@ -214,7 +214,6 @@ export default class App extends Component {
     const prepNotesUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatanotes.php?id=${id}`;
     const prepNotes = await this.fetchData(prepNotesUrl).then(prepNotesData => prepNotesData);
     const timersUrl = `https://www.matainventive.com/cordovaserver/database/jsonmataSensorBasic.php?id=${id}`;
-    ///timers takes a long time///////////////////////////////
     const timers = await this.fetchData(timersUrl).then(timerData => timerData);
     const chatHistoryUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatachat.php?id=${id}`;
     const chatHistory = await this.fetchData(chatHistoryUrl).then(
