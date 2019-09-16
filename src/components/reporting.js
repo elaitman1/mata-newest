@@ -341,10 +341,20 @@ export default class Reporting extends Component {
         <ul className='reportingJobNumberDropdownUl'>
         {this.props.allJobsParts.map(jobPart =>{
           if(this.props.machine.device_id === jobPart.device_id){
-            let utc = new Date().toJSON()
-            utc = utc.slice(0,10).replace(new RegExp('/', 'g'), '-')
+      ////////////////////////////////////////////////////////////////////////utc date created
+            var date = new Date();
+            var now_utc =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+            date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+            let utcDate = new Date(now_utc).toString().slice(4,15)
+          ////////////////////////////////////////////////////////////////////////Application date changed to utc
+            let s = jobPart["EditTime"].slice(0,10)
+            let newS = [s[5],s[6]," ",s[8],s[9]," ",s[0],s[1],s[2],s[3]]
+            let newSMonth = parseInt([newS[0],newS[1]].join(''))
+            let months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            let newSWordMonth = months[newSMonth]
+            let applicationDateToUTC = [newSWordMonth,' ',newS[3],newS[4],newS[5],newS[6],newS[7],newS[8],newS[9]].join('')
 
-              if(jobPart["EditTime"].slice(0,10) === utc){
+              if(applicationDateToUTC === utcDate){
                 return <li className='reportingJobNumberDropdownli'
                   onClick={this.handleJobNumberClicked}
                   >
