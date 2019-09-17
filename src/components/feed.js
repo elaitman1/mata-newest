@@ -55,9 +55,7 @@ export default class Feed extends Component {
         <header className="feed-cells-container">{this.renderCells()}</header>
         <section className="feed-items-container">
           {Object.keys(this.state.currentCell[1].devices).map((machSpecs, idx) => {
-
             machSpecs = this.state.currentCell[1].devices[machSpecs];
-
             return (
               <FeedItem
                 key={idx}

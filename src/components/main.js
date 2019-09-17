@@ -36,8 +36,6 @@ const Main = props => {
       } else {
         return (
           <Machine
-            user={props.user}
-            allJobsParts={props.allJobsParts}
             machine={props.machineSelected}
             chats={props.chats}
             toggleMachineSelection={props.toggleMachineSelection}

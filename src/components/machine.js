@@ -15,10 +15,6 @@ export default class Machine extends Component {
     partNumber: ""
   };
 
-  changeCurrentJobNumber = async (jobNum) =>{
-    await this.setState({jobNumber:jobNum})
-  }
-
   displayTask = task => {
     return () => {
       this.setState({ selectedTask: task });
@@ -73,8 +69,7 @@ export default class Machine extends Component {
     }
     switch (this.state.selectedTask) {
       case "Start Job":
-        return <StartJob
-        jobNumber={this.state.jobNumber}
+        return <StartJob jobNumber={this.state.jobNumber}
         toggleCamera={this.toggleCamera}
         saveNewJob={this.props.saveNewJob}
         cameraView={this.state.cameraView}
@@ -85,15 +80,19 @@ export default class Machine extends Component {
         />;
 
       case "Reporting":
-        return <Reporting
-        user={this.props.user}
-        jobNumber={this.state.jobNumber}
-        chats={this.props.chats}
-        changeCurrentJobNumber={this.changeCurrentJobNumber}
-        allJobsParts={this.props.allJobsParts}
-        machine={this.props.machine} saveReporting={this.props.saveReporting} hideTask={this.hideTask} />;
+        this.loadLatestJob();
+        return <Reporting chats={this.props.chats} 
+        machine={this.props.machine} 
+        saveReporting={this.props.saveReporting} 
+        hideTask={this.hideTask} 
+        latestJob={this.props.latestJob}
+        />;
       case "Inspection":
-        return <Inspection machine={this.props.machine} hideTask={this.hideTask} />;
+        this.loadLatestJob();
+        return <Inspection machine={this.props.machine} 
+        hideTask={this.hideTask} 
+        latestJob={this.props.latestJob}
+        />;
       case "Timer":
         return <Timer machine={this.props.machine} setDeviceTimer={this.props.setDeviceTimer} hideTask={this.hideTask} />;
       default:
