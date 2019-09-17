@@ -1,143 +1,60 @@
 import React from "react";
 
-class FeedItem extends React.Component{
-  state = {
-    stateUtilization:this.props.machSpecs.utilization
-  }
+const FeedItem = props => {
+  const { name, utilization, timer, status } = props.machSpecs;
+  let { timeOn } = props.machSpecs;
 
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({stateUtilization: this.props.machSpecs.utilization});
-    }, 15 * 60 * 1000);
-  }
+  const feedItemImg = timer ? (
+    <img className="feed-item-img timer" src="./assets/timer.png" alt="Timer" />
+  ) : (
+    <img className="feed-item-img machlist" src="./assets/machList.png" alt="MachList" />
+  );
 
-  render(){
-    debugger
-    const { name, timer, status } = this.props.machSpecs;
-    let { timeOn } = this.props.machSpecs;
+  const timerText = timer ? (
+    <div className="feed-item-timer-text">
+      <p>{timer.timer}</p>
+      <p>{timer.status}</p>
+    </div>
+  ) : (
+    ""
+  );
+  timeOn = timeOn === "0 Sec" ? "Off" : `${timeOn} On`;
 
-    const feedItemImg = timer ? (
-      <img className="feed-item-img timer" src="./assets/timer.png" alt="Timer" />
-    ) : (
-      <img className="feed-item-img machlist" src="./assets/machList.png" alt="MachList" />
-    );
-
-    const timerText = timer ? (
-      <div className="feed-item-timer-text">
-        <p>{timer.timer}</p>
-        <p>{timer.status}</p>
-      </div>
-    ) : (
-      ""
-    );
-    timeOn = timeOn === "0 Sec" ? "Off" : `${timeOn} On`;
-
-    return (
-      <div
-        className="feed-item"
+  return (
+    <div
+      className="feed-item"
+      style={{
+        border: status === "Online" ? "2px solid #7ED321" : "2px solid #9B9B9B"
+      }}
+      onClick={props.toggleMachineSelection(props.machSpecs)}
+    >
+      <span
+        className="feed-indicator-dot"
         style={{
-          border: status === "Online" ? "2px solid #7ED321" : "2px solid #9B9B9B"
+          backgroundColor: status === "Online" ? "#7ED321" : "#9B9B9B"
         }}
-        onClick={this.props.toggleMachineSelection(this.props.machSpecs)}
-      >
-        <span
-          className="feed-indicator-dot"
-          style={{
-            backgroundColor: status === "Online" ? "#7ED321" : "#9B9B9B"
-          }}
-        />
-        <div className="feed-item-img-wrapper">
-          {feedItemImg}
-          {timerText}
-        </div>
-        <div className="feed-item-text-wrapper">
-          <p>{name}</p>
-          <div
-            style={{
-              color:
-                this.state.Utilization >= 66
-                  ? "#7ED321"
-                  : this.state.stateUtilization <= 39 ? "#BB0000" : "orange"
-            }}
-          >
-            <p>{this.state.stateUtilization}% Utilization</p>
-            <p>{timeOn} Today</p>
-          </div>
-        </div>
-        <p>{status}</p>
+      />
+      <div className="feed-item-img-wrapper">
+        {feedItemImg}
+        {timerText}
       </div>
-    );
-  };
-
-}
+      <div className="feed-item-text-wrapper">
+        <p>{name}</p>
+        <div
+          style={{
+            color:
+              utilization >= 66
+                ? "#7ED321"
+                : utilization <= 39 ? "#BB0000" : "orange"
+          }}
+        >
+          <p>{utilization}% Utilization</p>
+          <p>{timeOn} Today</p>
+        </div>
+      </div>
+      <p>{status}</p>
+    </div>
+  );
+};
 
 export default FeedItem;
-
-
-
-
-
-
-
-
-
-// import React from "react";
-//
-// const FeedItem = props => {
-//   const { name, utilization, timer, status } = props.machSpecs;
-//   let { timeOn } = props.machSpecs;
-//
-//   const feedItemImg = timer ? (
-//     <img className="feed-item-img timer" src="./assets/timer.png" alt="Timer" />
-//   ) : (
-//     <img className="feed-item-img machlist" src="./assets/machList.png" alt="MachList" />
-//   );
-//
-//   const timerText = timer ? (
-//     <div className="feed-item-timer-text">
-//       <p>{timer.timer}</p>
-//       <p>{timer.status}</p>
-//     </div>
-//   ) : (
-//     ""
-//   );
-//   timeOn = timeOn === "0 Sec" ? "Off" : `${timeOn} On`;
-//
-//   return (
-//     <div
-//       className="feed-item"
-//       style={{
-//         border: status === "Online" ? "2px solid #7ED321" : "2px solid #9B9B9B"
-//       }}
-//       onClick={props.toggleMachineSelection(props.machSpecs)}
-//     >
-//       <span
-//         className="feed-indicator-dot"
-//         style={{
-//           backgroundColor: status === "Online" ? "#7ED321" : "#9B9B9B"
-//         }}
-//       />
-//       <div className="feed-item-img-wrapper">
-//         {feedItemImg}
-//         {timerText}
-//       </div>
-//       <div className="feed-item-text-wrapper">
-//         <p>{name}</p>
-//         <div
-//           style={{
-//             color:
-//               utilization >= 66
-//                 ? "#7ED321"
-//                 : utilization <= 39 ? "#BB0000" : "orange"
-//           }}
-//         >
-//           <p>{utilization}% Utilization</p>
-//           <p>{timeOn} Today</p>
-//         </div>
-//       </div>
-//       <p>{status}</p>
-//     </div>
-//   );
-// };
-//
-// export default FeedItem;
