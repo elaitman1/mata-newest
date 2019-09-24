@@ -3,6 +3,7 @@ import _ from "lodash";
 
 export default class StartJobItem extends Component {
   render = () => {
+    console.log(this.props.jobNum)
     return (
       <div className="start-job-item-inputs-container">
         {Object.keys(this.props.inputValues).map((inputType, idx) => {
@@ -24,7 +25,8 @@ export default class StartJobItem extends Component {
   };
 }
 
-const Input = props => {      
+const Input = props => {
+  console.log(props)
   const cameraIcon = props.inputType !== "partCount" ?
   <img onClick={props.toggleCamera} value={props.type} src="./assets/camera.png" alt="camera" /> : "";
 
@@ -45,7 +47,11 @@ const Input = props => {
     <div className="start-job-item-input-container">
       {inputName}
       <span className="start-job-item-input">
-        <input type={type} value={props.inputValue} onChange={update} />
+        <input
+          type={type}
+          value={props.inputValue}
+          onChange={update}
+        />
         {cameraIcon}
       </span>
     </div>

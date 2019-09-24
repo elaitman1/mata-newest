@@ -53,7 +53,6 @@ class TakePhoto extends Component {
 
   render () {
     return (
-
       <div className="start-job-container">
         <Camera
           onTakePhoto = { (dataUri) => { this.onTakePhoto(dataUri); } }

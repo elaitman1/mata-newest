@@ -12,7 +12,8 @@ export default class Machine extends Component {
     cameraView: false,
     jobNumber: "",
     inputIndicator: "",
-    partNumber: ""
+    partNumber: "",
+    currentJob:"",
   };
 
   displayTask = task => {
@@ -21,8 +22,9 @@ export default class Machine extends Component {
     };
   };
 
-  toggleCamera = async(inputIndicator) => {
-    await this.setState({ cameraView: !this.state.cameraView, inputIndicator:inputIndicator })
+  toggleCamera = async(inputIndicator, cjob) => {
+    await this.setState({ cameraView: !this.state.cameraView, inputIndicator:inputIndicator, currentJob:cjob })
+
   }
 
   cameraOffAndSetInput = async(input) => {
@@ -69,7 +71,8 @@ export default class Machine extends Component {
     }
     switch (this.state.selectedTask) {
       case "Start Job":
-        return <StartJob jobNumber={this.state.jobNumber}
+        return <StartJob
+        jobNumber={this.state.jobNumber}
         toggleCamera={this.toggleCamera}
         saveNewJob={this.props.saveNewJob}
         cameraView={this.state.cameraView}
@@ -77,20 +80,21 @@ export default class Machine extends Component {
         partNumber={this.state.partNumber}
         machine={this.props.machine}
         latestJob={this.props.latestJob}
+        currentJob={this.state.currentJob}
         />;
 
       case "Reporting":
         this.loadLatestJob();
-        return <Reporting chats={this.props.chats} 
-        machine={this.props.machine} 
-        saveReporting={this.props.saveReporting} 
-        hideTask={this.hideTask} 
+        return <Reporting chats={this.props.chats}
+        machine={this.props.machine}
+        saveReporting={this.props.saveReporting}
+        hideTask={this.hideTask}
         latestJob={this.props.latestJob}
         />;
       case "Inspection":
         this.loadLatestJob();
-        return <Inspection machine={this.props.machine} 
-        hideTask={this.hideTask} 
+        return <Inspection machine={this.props.machine}
+        hideTask={this.hideTask}
         latestJob={this.props.latestJob}
         />;
       case "Timer":
