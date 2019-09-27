@@ -67,8 +67,6 @@ export default class StartJob extends Component {
 
   // update the respective input value of specified job number's object
   update = (type, jobNum, value) => {
-    console.log(type)
-    console.log(this.state.inputIndicator )
     jobNum = this.state.currentJob
     if(this.state.inputIndicator === "Job"){
       type = "jobNumber"
