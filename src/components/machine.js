@@ -9,11 +9,12 @@ import TakePhoto from './camera'
 export default class Machine extends Component {
   state = {
     selectedTask: null,
-    cameraView: false,
+    // cameraView: false,
     jobNumber: "",
     inputIndicator: "",
     partNumber: "",
     currentJob:"",
+    cameraInput:"",
   };
 
   displayTask = task => {
@@ -22,29 +23,28 @@ export default class Machine extends Component {
     };
   };
 
-  toggleCamera = async(inputIndicator, cjob) => {
-    await this.setState({ cameraView: !this.state.cameraView, inputIndicator:inputIndicator, currentJob:cjob })
+  // toggleCamera = async(inputIndicator, cjob) => {
+  //   await this.setState({ cameraView: !this.state.cameraView, inputIndicator:inputIndicator, currentJob:cjob })
+  // }
 
-  }
-
-  cameraOffAndSetInput = async(input) => {
-    let { inputIndicator } = this.state
-    let { cameraView } = this.state
-    if(inputIndicator === 'Job' && input === "Please retake photo."){
-      await this.setState({ cameraView: !cameraView, jobNumber: input})
-    }else if(inputIndicator === 'Part' && input === "Please retake photo."){
-      await this.setState({ cameraView: !cameraView, partNumber: input})
-    }else if(inputIndicator === 'Job'){
-      await this.setState({ cameraView: !cameraView, jobNumber: input})
-    }else if(inputIndicator === 'Part'){
-      await this.setState({ cameraView: !cameraView, partNumber: input})
-    }
-  }
+  // cameraOffAndSetInput = (input) => {
+  //   let { inputIndicator } = this.state
+  //   let { cameraView } = this.state
+  //   this.setState({ cameraView: !cameraView, cameraInput:input})
+    // if(inputIndicator === 'Job' && input === "Please retake photo."){
+    //   await this.setState({ cameraView: !cameraView, jobNumber: input})
+    // }else if(inputIndicator === 'Part' && input === "Please retake photo."){
+    //   await this.setState({ cameraView: !cameraView, partNumber: input})
+    // }else if(inputIndicator === 'Job'){
+    //   await this.setState({ cameraView: !cameraView, jobNumber: input})
+    // }else if(inputIndicator === 'Part'){
+    //   await this.setState({ cameraView: !cameraView, partNumber: input})
+    // }
+  // }
 
   hideTask = () => {
     this.setState({ selectedTask: null });
   }
-
 
   loadLatestJob = () => {
     let chats = this.props.chats;
@@ -81,6 +81,7 @@ export default class Machine extends Component {
         machine={this.props.machine}
         latestJob={this.props.latestJob}
         currentJob={this.state.currentJob}
+        cameraInput={this.state.cameraInput}
         />;
 
       case "Reporting":

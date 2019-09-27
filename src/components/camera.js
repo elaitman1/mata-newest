@@ -6,7 +6,6 @@ import axios from 'axios';
 class TakePhoto extends Component {
 
   onTakePhoto = async(dataUri) => {
-
     const config = {
       sizeFactor: 1,
       imgCompression: .5,
@@ -47,7 +46,7 @@ class TakePhoto extends Component {
       })
     .catch((error) => {
       let errorMessage = 'Please retake photo.'
-        return this.props.cameraOffAndSetInput(errorMessage)
+        return this.props.update("","",errorMessage)
     })
   }
 

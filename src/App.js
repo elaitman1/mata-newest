@@ -49,7 +49,6 @@ export default class App extends Component {
   countDown = 0;
 
   componentDidMount = () => {
-
     const userData = localStorage.getItem("Mata Inventive");
     if (userData) {
       this.logIn(JSON.parse(userData).ID).then(res => {
@@ -311,7 +310,7 @@ export default class App extends Component {
           if (typeof devObj !== "undefined") {
             maxOnTime = currentTime - new Date(devObj.MaxOnTime).getTime();
             maxEndTime =currentTime - new Date(devObj.MaxEndTime).getTime();
-          } 
+          }
           if (maxOnTime <= 600000) {
             // if (devObj.MaxEndTime <= devObj.MaxStartTime || maxEndTime <= 600000) {
             status = "Online";
