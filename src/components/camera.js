@@ -24,7 +24,7 @@ class TakePhoto extends Component {
         }
       ]
     }
-
+    debugger
     await axios({
         method: 'post',
         url: 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDbXhEc-ohKbIv4J8J8drPfAnNZ1Q8cEOk',
@@ -34,13 +34,12 @@ class TakePhoto extends Component {
       .then(r => {
         let array = r.data.responses[0].textAnnotations
         for (let x = 1; x< array.length; x++){
-
           let data = array[x].description
 
           if (data.match(/\d/g) && data.length > 7){
-            return this.props.cameraOffAndSetInput(array[x].description)
+            return this.props.update("","",array[x].description)
           }else if (!data.match(/[A-z]/i) && data.length >=5){
-            return this.props.cameraOffAndSetInput(array[x].description)
+            return this.props.update("","",array[x].description)
           }
         }
       })
