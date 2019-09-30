@@ -458,7 +458,7 @@ export default class App extends Component {
       let mtconData = mtconDataObj[devId];
       if (mtconData) mtconData.device_id = devId;
       if (vibData && mtconData) {
-        return vibData["MaxOnTime"] > mtconData["MaxOnTime"]
+        return vibData["SumONTimeSeconds"] > mtconData["SumONTimeSeconds"]
           ? vibData
           : mtconData;
       } else if (vibData) {
