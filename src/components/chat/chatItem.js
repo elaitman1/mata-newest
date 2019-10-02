@@ -90,6 +90,7 @@ export default class ChatItem extends Component {
   }
 
   render = () => {
+    
     const chatItem = this.props.chats[this.props.displayChat[0]][
       this.props.displayChat[1]
     ];

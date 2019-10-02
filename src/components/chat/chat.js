@@ -12,17 +12,21 @@ export default class Chat extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
     this.setState({ search: "" });
   };
 
   render = () => {
     const chats = this.props.chats;
+
+
     let latestJobPartDate, filteredChatResult;
     if (this.state.search.trim() === "") {
+
       Object.keys(chats).forEach(chatType => {
+
         if (chatType !== "Machines") {
           Object.keys(chats[chatType]).forEach(chatName => {
+
             const chatObj = chats[chatType][chatName];
             const startTime = chatObj.responses["Start Time"];
             const editTime =
@@ -70,11 +74,23 @@ export default class Chat extends Component {
         Parts: {},
         Jobs: {}
       };
+
+
+      //here instead of filtering just the chats, we can also do all the machines
+      //so want to add machines from the whole day in the same format
       Object.keys(chats).forEach(chatType => {
+
+        //goes through chats
         Object.keys(chats[chatType]).forEach(chatName => {
+
+          //goes through chatname
           const searchString = _.lowerCase(this.state.search);
+          //cuts off string that is searched
           if (_.lowerCase(chatName).includes(searchString)) {
+            //if what was searched matches the name of the chat
             const chatObj = chats[chatType][chatName];
+
+            //then chat obj is created, then filtered chat result at chatname = chat obj
             filteredChatResult[chatType][chatName] = chatObj;
           }
         });

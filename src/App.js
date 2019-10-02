@@ -149,6 +149,7 @@ export default class App extends Component {
   logIn = async id => {
     const configState = await this.loadData(id).
     then(data => {
+      debugger
       //this is where all the fetch data is so that you do not need to fetch multiple times
       this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
     });
@@ -220,6 +221,7 @@ export default class App extends Component {
     );
 
     const currentTime = Date.now();
+
     const dataArr = await Promise.all([
       user,
       notifications,
@@ -254,13 +256,19 @@ export default class App extends Component {
       let cellObj = {};
       let chatObj = { Machines: {}, Parts: {}, Jobs: {} };
       cells.forEach(cell => {
+
         let dataObj = {};
         dataObj["cellName"] = cell.name;
-        const cellDevices = devices.filter(
-          device => device.cell_id === cell.cell_id
-        );
+
+        const cellDevices = devices.filter(device=>{
+
+           return device.cell_id === cell.cell_id
+        });
+
+        debugger/////////////////////////////////////////////cell devices has all three of the devices where can we get the chat history
         let cellDevsObj = {};
         cellDevices.forEach(cellDev => {
+
           const id = cellDev.device_id;
           const devObj = devicesDetails[id];
 
@@ -271,7 +279,6 @@ export default class App extends Component {
             cellDev["timeOn"] = this.timeConversion(
             1000*parseInt(devObj.SumONTimeSeconds),
             "timeOn")
-
             let utilization = Math.round(
               parseInt(devObj.SumDayUpTime) /
                 parseInt(devObj.SumONTimeSeconds) *
@@ -279,7 +286,6 @@ export default class App extends Component {
             );
             utilization = utilization.toString() === "NaN" ? 0 : utilization;
             cellDev["utilization"] = utilization;
-
           };
           let timer = "";
           const devTimer = timers[id];
@@ -339,10 +345,10 @@ export default class App extends Component {
           reportingObj.notes = notes;
           cellDev["reporting"] = reportingObj;
 
-          let machinename = "N/A"
+
           if (typeof devObj !== "undefined") {
-            machinename = devObj.name
-          }
+            let machinename = devObj.name
+
 
           chatObj.Machines[machinename] = {
             chatHistory: { chatFirstBegan: "", chatLog: [] },
@@ -351,6 +357,7 @@ export default class App extends Component {
               "Machine Status": status
             }
           };
+        }
           cellDevsObj[id] = cellDev;
         });
         dataObj["devices"] = cellDevsObj;
@@ -366,14 +373,7 @@ export default class App extends Component {
           partcount
         } = jobPart;
 
-        //let editTimeZ = editTime + "Z";
         let now = new Date();
-        //let date = new Date(editTimeZ);
-        //let date = Date.parse(editTime);
-        //let d = new Date(date + (now.getTimezoneOffset() * 60000));
-        // const editTime = this.formatTime(
-        //   new Date(now.getTime() + now.getTimezoneOffset() * 60000)
-        // );
 
         let date = Date.parse(editTime);
         let d = new Date(date);
@@ -745,9 +745,8 @@ export default class App extends Component {
   };
 
   render = () => {
-
     if (!localStorage.getItem("Mata Inventive")) {
-      return <Splash fetchData={this.fetchData} logIn={this.logIn} chats={this.state.chats}/>;
+      return <Splash fetchData={this.fetchData} logIn={this.logIn} />;
     } else {
       return (
         this.state.isLoading ?
