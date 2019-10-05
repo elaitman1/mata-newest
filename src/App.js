@@ -149,7 +149,7 @@ export default class App extends Component {
   logIn = async id => {
     const configState = await this.loadData(id).
     then(data => {
-      debugger
+
       //this is where all the fetch data is so that you do not need to fetch multiple times
       this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
     });
@@ -265,8 +265,9 @@ export default class App extends Component {
            return device.cell_id === cell.cell_id
         });
 
-        debugger/////////////////////////////////////////////cell devices has all three of the devices where can we get the chat history
+        /////////////////////////////////////////////cell devices has all three of the devices where can we get the chat history
         let cellDevsObj = {};
+
         cellDevices.forEach(cellDev => {
 
           const id = cellDev.device_id;
@@ -346,8 +347,10 @@ export default class App extends Component {
           cellDev["reporting"] = reportingObj;
 
 
-          if (typeof devObj !== "undefined") {
-            let machinename = devObj.name
+          // if (typeof devObj !== "undefined") {
+
+            let machinename = cellDev.name
+
 
 
           chatObj.Machines[machinename] = {
@@ -357,7 +360,7 @@ export default class App extends Component {
               "Machine Status": status
             }
           };
-        }
+        // }
           cellDevsObj[id] = cellDev;
         });
         dataObj["devices"] = cellDevsObj;
