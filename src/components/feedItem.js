@@ -1,7 +1,9 @@
 import React from "react";
 
 const FeedItem = props => {
+
   const { name, utilization, timer, status } = props.machSpecs;
+  debugger
   let { timeOn } = props.machSpecs;
 
   const feedItemImg = timer ? (

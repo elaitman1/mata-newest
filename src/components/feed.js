@@ -39,15 +39,16 @@ export default class Feed extends Component {
     });
   };
 
-  renderFeedItem = () => {
-    return this.state.currentCell[1].machineStuff.map((machSpecs, idx) => (
-      <FeedItem
-        key={idx}
-        machSpecs={machSpecs}
-        toggleMachineSelection={this.props.toggleMachineSelection}
-      />
-    ));
-  };
+  // renderFeedItem = () => {
+  //   debugger
+  //   return this.state.currentCell[1].machineStuff.map((machSpecs, idx) => (
+  //     <FeedItem
+  //       key={idx}
+  //       machSpecs={machSpecs}
+  //       toggleMachineSelection={this.props.toggleMachineSelection}
+  //     />
+  //   ));
+  // };
 
   render = () => {
     return (
@@ -55,9 +56,11 @@ export default class Feed extends Component {
         <header className="feed-cells-container">{this.renderCells()}</header>
         <section className="feed-items-container">
           {Object.keys(this.state.currentCell[1].devices).map((machSpecs, idx) => {
-            machSpecs = this.state.currentCell[1].devices[machSpecs];
+            debugger
+            machSpecs = this.props.cells[11].devices[machSpecs];
             return (
               <FeedItem
+                cell={this.props.cells}
                 key={idx}
                 machSpecs={machSpecs}
                 toggleMachineSelection={this.props.toggleMachineSelection}
