@@ -157,7 +157,6 @@ export default class App extends Component {
       //this is where all the fetch data is so that you do not need to fetch multiple times
        this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
     });
-
     return configState;
   // }, 100)
   };
@@ -255,6 +254,7 @@ export default class App extends Component {
       const inspectHistory = data[10];
 
       const userObj = user[0];
+
       userObj.notifications = {};
       userObj.notifications.Text =
         notifications[0].alertenablephone === "1" ? true : false;
@@ -756,7 +756,9 @@ export default class App extends Component {
   };
 
   render = () => {
-    setInterval(()=>{this.logIn(this.state.user.ID)}, 10000)
+    if(this.state.user.ID !== ""){
+    setInterval(()=>{this.logIn(this.state.user.ID)}, 1000)
+    }
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} />;
     } else {

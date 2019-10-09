@@ -27,11 +27,11 @@ const Main = props => {
       );
     } else {
       if (!props.machineSelected) {
-
         return (
           <Feed
             cells={props.cells}
             toggleMachineSelection={props.toggleMachineSelection}
+            user={props.user}
           />
         );
       } else {
