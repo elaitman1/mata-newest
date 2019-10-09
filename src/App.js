@@ -51,11 +51,15 @@ export default class App extends Component {
   componentDidMount = () => {
     const userData = localStorage.getItem("Mata Inventive");
     if (userData) {
-      this.logIn(JSON.parse(userData).ID).then(res => {
+    this.logIn(JSON.parse(userData).ID).then(res => {
         this.countDownTimers();
       });
     }
   };
+
+
+
+
 
   // converts Date.now() milliseconds into the time, in the appropriate measurement, since the message was sent
   timeConversion = (millisec, type) => {
@@ -147,13 +151,14 @@ export default class App extends Component {
   };
 
   logIn = async id => {
-    const configState = await this.loadData(id).
-    then(data => {
 
+    // setInterval(() =>{
+    const configState = await this.loadData(id).then(data => {
       //this is where all the fetch data is so that you do not need to fetch multiple times
-      this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
+       this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
     });
     return configState;
+  // }, 100)
   };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////z
   createDevicesDetailsUrl = id => {
@@ -182,6 +187,7 @@ export default class App extends Component {
   };
 
   loadData = async id => {
+
     const userUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatausersprofile.php?id=${id}`;
     const user = await this.fetchData(userUrl).then(userData => userData);
     const notificationsUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatastatusconfig.php?id=${id}`;
@@ -248,6 +254,7 @@ export default class App extends Component {
       const inspectHistory = data[10];
 
       const userObj = user[0];
+
       userObj.notifications = {};
       userObj.notifications.Text =
         notifications[0].alertenablephone === "1" ? true : false;
@@ -748,6 +755,9 @@ export default class App extends Component {
   };
 
   render = () => {
+    if(this.state.user.ID !== ""){
+    setInterval(()=>{this.logIn(this.state.user.ID)}, 15*60*1000)
+    }
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} />;
     } else {

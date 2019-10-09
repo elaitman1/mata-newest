@@ -39,25 +39,29 @@ export default class Feed extends Component {
     });
   };
 
-  renderFeedItem = () => {
-    return this.state.currentCell[1].machineStuff.map((machSpecs, idx) => (
-      <FeedItem
-        key={idx}
-        machSpecs={machSpecs}
-        toggleMachineSelection={this.props.toggleMachineSelection}
-      />
-    ));
-  };
+  // renderFeedItem = () => {
+  //
+  //   return this.state.currentCell[1].machineStuff.map((machSpecs, idx) => (
+  //     <FeedItem
+  //       key={idx}
+  //       machSpecs={machSpecs}
+  //       toggleMachineSelection={this.props.toggleMachineSelection}
+  //     />
+  //   ));
+  // };
 
   render = () => {
     return (
       <div className="feed-container">
         <header className="feed-cells-container">{this.renderCells()}</header>
         <section className="feed-items-container">
-          {Object.keys(this.state.currentCell[1].devices).map((machSpecs, idx) => {
-            machSpecs = this.state.currentCell[1].devices[machSpecs];
+
+          {Object.keys(this.props.cells[Object.keys(this.props.cells)[0]].devices).map((machSpecs, idx) => {
+            // machSpecs = this.state.currentCell[1].devices[machSpecs];
+            machSpecs = this.props.cells[Object.keys(this.props.cells)[0]].devices[machSpecs];
             return (
               <FeedItem
+                cell={this.props.cells}
                 key={idx}
                 machSpecs={machSpecs}
                 toggleMachineSelection={this.props.toggleMachineSelection}

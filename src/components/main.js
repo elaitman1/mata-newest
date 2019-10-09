@@ -31,6 +31,7 @@ const Main = props => {
           <Feed
             cells={props.cells}
             toggleMachineSelection={props.toggleMachineSelection}
+            user={props.user}
           />
         );
       } else {
