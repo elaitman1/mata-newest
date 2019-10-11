@@ -6,6 +6,7 @@ import ProfileItem from "./profile/profileItem";
 
 const Main = props => {
   const renderMain = () => {
+
     //see parent of profileItem to see where toggleNotification comes from
     if (props.displayProfile) {
       return (

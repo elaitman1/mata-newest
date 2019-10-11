@@ -23,25 +23,6 @@ export default class Machine extends Component {
     };
   };
 
-  // toggleCamera = async(inputIndicator, cjob) => {
-  //   await this.setState({ cameraView: !this.state.cameraView, inputIndicator:inputIndicator, currentJob:cjob })
-  // }
-
-  // cameraOffAndSetInput = (input) => {
-  //   let { inputIndicator } = this.state
-  //   let { cameraView } = this.state
-  //   this.setState({ cameraView: !cameraView, cameraInput:input})
-    // if(inputIndicator === 'Job' && input === "Please retake photo."){
-    //   await this.setState({ cameraView: !cameraView, jobNumber: input})
-    // }else if(inputIndicator === 'Part' && input === "Please retake photo."){
-    //   await this.setState({ cameraView: !cameraView, partNumber: input})
-    // }else if(inputIndicator === 'Job'){
-    //   await this.setState({ cameraView: !cameraView, jobNumber: input})
-    // }else if(inputIndicator === 'Part'){
-    //   await this.setState({ cameraView: !cameraView, partNumber: input})
-    // }
-  // }
-
   hideTask = () => {
     this.setState({ selectedTask: null });
   }
@@ -58,7 +39,7 @@ export default class Machine extends Component {
           latestJob = {"job":chatName,"part":chatObj.responses["Part Number"]};
        }
     });
-    this.props.latestJob = latestJob
+    latestJob = this.props.latestJob
   };
 
   renderTask = () => {
@@ -86,7 +67,8 @@ export default class Machine extends Component {
 
       case "Reporting":
         this.loadLatestJob();
-        return <Reporting chats={this.props.chats}
+        return <Reporting
+        chats={this.props.chats}
         machine={this.props.machine}
         saveReporting={this.props.saveReporting}
         hideTask={this.hideTask}
@@ -94,7 +76,9 @@ export default class Machine extends Component {
         />;
       case "Inspection":
         this.loadLatestJob();
-        return <Inspection machine={this.props.machine}
+
+        return <Inspection
+        machine={this.props.machine}
         hideTask={this.hideTask}
         latestJob={this.props.latestJob}
         />;
@@ -106,6 +90,7 @@ export default class Machine extends Component {
   };
 
   render = () => {
+    
     const buttonTypes = [
       "Start Job",
       "Reporting",

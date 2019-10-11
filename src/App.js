@@ -729,32 +729,10 @@ export default class App extends Component {
       newUser.notifications[type] = !newUser.notifications[type];
       this.setState({ user: newUser });
     });
-
-    //below we are toggling the users attribute of specific categories being in do not disturb mode or not.
-    // var dataString="userid="+title+"&emailstate="+emailstate+"&textstate="+textstate+"&insert=";
-    // // $("#alertwarning").text("");
-    // if($.trim(title).length>0)
-    // {
-    // 	$.ajax({
-    // 		type: "POST",
-    // 		url:"https://www.matainventive.com/cordovaserver/database/togglealertconfig.php",
-    // 		data: dataString,
-    // 		crossDomain: true,
-    // 		cache: false,
-    // 		beforeSend: function(){ $("#insertalert").val('Connecting...');},
-    // 		success: function(data){
-    // 		if(data=="success")
-    // 			{
-    // 			}
-    // 		else if(data=="error")
-    // 			{
-    // 			}
-    // 		}
-    // 	});
-    // }
   };
 
   render = () => {
+
     if(this.state.user.ID !== ""){
     setInterval(()=>{this.logIn(this.state.user.ID)}, 15*60*1000)
     }
@@ -805,7 +783,7 @@ export default class App extends Component {
               saveNewJob={this.saveNewJob}
               saveReporting={this.saveReporting}
               setDeviceTimer={this.setDeviceTimer}
-              latestJob = {this.latestJob}
+              latestJob = {this.state.latestJob}
             />
           </div>
           <span id="profile" className="profile-wrapper">

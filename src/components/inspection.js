@@ -6,6 +6,7 @@ export default class Inspection extends Component {
   state = {
     goodParts: 1,
     badParts: 1,
+    reworkParts:1,
     showConfirmation: false
   };
 
@@ -104,7 +105,9 @@ export default class Inspection extends Component {
     const good =
       this.state.goodParts !== "" ? parseInt(this.state.goodParts) : 0;
     const bad = this.state.badParts !== "" ? parseInt(this.state.badParts) : 0;
-    const totalParts = _.sum([good, bad]);
+    const rework = this.state.reworkParts !== "" ? parseInt(this.state.reworkParts) : 0;
+
+    const totalParts = _.sum([good, bad, rework]);
     const partsInputs = Object.keys(this.state).map((partsType, idx) => {
       if (partsType !== "showConfirmation") {
         let type = _.capitalize(partsType.slice(0, partsType.length - 5));
@@ -161,7 +164,11 @@ export default class Inspection extends Component {
 const PartsInput = props => {
   return (
     <div className="inspection-input-container">
+    {props.type !== 'Rework'?
       <p>{props.type} Parts</p>
+    :
+      <p>{props.type}</p>
+    }
       <span className="inspection-parts-input">
         <div onClick={props.updatePartsNum(props.partsType, "minus")}>-</div>
         <input
