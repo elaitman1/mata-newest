@@ -18,11 +18,9 @@ export default class Feed extends Component {
       document.getElementById(cellArr[0]).className = "cell selected";
       this.setState({ currentCell: cellArr });
     };
-
   };
 
   renderCells = () => {
-
     return Object.keys(this.props.cells).map((cell, idx) => {
       cell = this.props.cells[cell];
       // first cell when rendering component sets styling for blue border on the first cell

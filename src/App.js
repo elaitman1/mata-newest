@@ -289,7 +289,6 @@ export default class App extends Component {
             );
             utilization = utilization.toString() === "NaN" ? 0 : utilization;
             cellDev["utilization"] = utilization;
-            cellDev["utilization"] = Math.random();
           };
           let timer = "";
           const devTimer = timers[id];
@@ -724,7 +723,7 @@ export default class App extends Component {
 
   render = () => {
     if(this.state.user.ID !== ""){
-    setInterval(()=>{this.logIn(this.state.user.ID)}, 10000)
+    setInterval(()=>{this.logIn(this.state.user.ID)}, 15*60*1000)
     }
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} />;
