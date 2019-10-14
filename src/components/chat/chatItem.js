@@ -32,7 +32,7 @@ export default class ChatItem extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
+    
     if (this.state.message.trim() !== "") {
       this.checkChatInitialTime();
       this.props.sendNewMessage(
@@ -90,7 +90,7 @@ export default class ChatItem extends Component {
   }
 
   render = () => {
-    
+
     const chatItem = this.props.chats[this.props.displayChat[0]][
       this.props.displayChat[1]
     ];

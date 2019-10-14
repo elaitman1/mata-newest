@@ -18,7 +18,6 @@ export default class Chat extends Component {
   render = () => {
     const chats = this.props.chats;
 
-
     let latestJobPartDate, filteredChatResult;
     if (this.state.search.trim() === "") {
 
@@ -60,7 +59,6 @@ export default class Chat extends Component {
                 : startTime;
         let d = new Date(editTime);
         let editTimeOutput = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-
             if (editTimeOutput === latestJobPartDateOutput) {
               filteredChatResult[chatType][chatName] = chatObj;
             }
