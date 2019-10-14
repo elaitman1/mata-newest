@@ -30,6 +30,7 @@ const Main = props => {
       if (!props.machineSelected) {
         return (
           <Feed
+            logIn={props.logIn}
             cells={props.cells}
             toggleMachineSelection={props.toggleMachineSelection}
             user={props.user}

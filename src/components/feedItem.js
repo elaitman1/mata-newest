@@ -1,7 +1,7 @@
 import React from "react";
 
 const FeedItem = props => {
-
+  
   const { name, utilization, timer, status } = props.machSpecs;
 
   let { timeOn } = props.machSpecs;

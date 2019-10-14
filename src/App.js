@@ -57,10 +57,6 @@ export default class App extends Component {
     }
   };
 
-
-
-
-
   // converts Date.now() milliseconds into the time, in the appropriate measurement, since the message was sent
   timeConversion = (millisec, type) => {
     if (type === "timer") {
@@ -152,15 +148,14 @@ export default class App extends Component {
 
   logIn = async id => {
 
-    // setInterval(() =>{
     const configState = await this.loadData(id).then(data => {
-      //this is where all the fetch data is so that you do not need to fetch multiple times
+
        this.setState({ user: data[0], cells: data[1], chats: data[2], isLoading: false })
     });
+
     return configState;
-  // }, 100)
   };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////z
+
   createDevicesDetailsUrl = id => {
     const localTime = this.formatTime(new Date());
 
@@ -187,7 +182,6 @@ export default class App extends Component {
   };
 
   loadData = async id => {
-
     const userUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatausersprofile.php?id=${id}`;
     const user = await this.fetchData(userUrl).then(userData => userData);
     const notificationsUrl = `https://www.matainventive.com/cordovaserver/database/jsonmatastatusconfig.php?id=${id}`;
@@ -241,6 +235,7 @@ export default class App extends Component {
       chatHistory,
       inspectHistory
     ]).then(data => {
+
       const user = data[0];
       const notifications = data[1];
       const cells = data[2];
@@ -294,6 +289,7 @@ export default class App extends Component {
             );
             utilization = utilization.toString() === "NaN" ? 0 : utilization;
             cellDev["utilization"] = utilization;
+            cellDev["utilization"] = Math.random();
           };
           let timer = "";
           const devTimer = timers[id];
@@ -353,12 +349,7 @@ export default class App extends Component {
           reportingObj.notes = notes;
           cellDev["reporting"] = reportingObj;
 
-
-          // if (typeof devObj !== "undefined") {
-
             let machinename = cellDev.name
-
-
 
           chatObj.Machines[machinename] = {
             chatHistory: { chatFirstBegan: "", chatLog: [] },
@@ -367,7 +358,7 @@ export default class App extends Component {
               "Machine Status": status
             }
           };
-        // }
+
           cellDevsObj[id] = cellDev;
         });
         dataObj["devices"] = cellDevsObj;
@@ -732,9 +723,8 @@ export default class App extends Component {
   };
 
   render = () => {
-
     if(this.state.user.ID !== ""){
-    setInterval(()=>{this.logIn(this.state.user.ID)}, 15*60*1000)
+    setInterval(()=>{this.logIn(this.state.user.ID)}, 10000)
     }
     if (!localStorage.getItem("Mata Inventive")) {
       return <Splash fetchData={this.fetchData} logIn={this.logIn} />;
@@ -767,6 +757,7 @@ export default class App extends Component {
               hideProfile={this.hideProfile}
             />
             <Main
+              logIn={this.logIn}
               fetchData={this.fetchData}
               user={this.state.user}
               cells={this.state.cells}
@@ -774,7 +765,6 @@ export default class App extends Component {
               displayChat={this.state.displayChat}
               hideProfile={this.hideProfile}
               displayProfile={this.state.displayProfile}
-              hideProfile={this.hideProfile}
               setInitialTime={this.setInitialTime}
               sendNewMessage={this.sendNewMessage}
               toggleNotification={this.toggleNotification}

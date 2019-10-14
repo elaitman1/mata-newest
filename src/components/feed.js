@@ -9,7 +9,7 @@ export default class Feed extends Component {
   };
 
   // when selecting a new cell, swap class names to change blue border styling as well as setting state.
-  selectCell = cellArr => {
+  selectCell = (cellArr) => {
     return () => {
       if (this.state.firstCellSelection) {
         this.setState({ firstCellSelection: false });
@@ -18,9 +18,11 @@ export default class Feed extends Component {
       document.getElementById(cellArr[0]).className = "cell selected";
       this.setState({ currentCell: cellArr });
     };
+
   };
 
   renderCells = () => {
+
     return Object.keys(this.props.cells).map((cell, idx) => {
       cell = this.props.cells[cell];
       // first cell when rendering component sets styling for blue border on the first cell
@@ -36,32 +38,23 @@ export default class Feed extends Component {
           {cell.cellName}
         </span>
       );
+
     });
   };
 
-  // renderFeedItem = () => {
-  //
-  //   return this.state.currentCell[1].machineStuff.map((machSpecs, idx) => (
-  //     <FeedItem
-  //       key={idx}
-  //       machSpecs={machSpecs}
-  //       toggleMachineSelection={this.props.toggleMachineSelection}
-  //     />
-  //   ));
-  // };
-
   render = () => {
+    console.log(Object.keys(this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices))
     return (
       <div className="feed-container">
         <header className="feed-cells-container">{this.renderCells()}</header>
         <section className="feed-items-container">
 
-          {Object.keys(this.props.cells[Object.keys(this.props.cells)[0]].devices).map((machSpecs, idx) => {
+          {Object.keys(this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices).map((machSpecs, idx) => {
+            
             // machSpecs = this.state.currentCell[1].devices[machSpecs];
-            machSpecs = this.props.cells[Object.keys(this.props.cells)[0]].devices[machSpecs];
+            machSpecs = this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices[machSpecs];
             return (
               <FeedItem
-                cell={this.props.cells}
                 key={idx}
                 machSpecs={machSpecs}
                 toggleMachineSelection={this.props.toggleMachineSelection}
