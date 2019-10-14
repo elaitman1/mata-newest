@@ -43,14 +43,13 @@ export default class Feed extends Component {
   };
 
   render = () => {
-    console.log(Object.keys(this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices))
     return (
       <div className="feed-container">
         <header className="feed-cells-container">{this.renderCells()}</header>
         <section className="feed-items-container">
 
           {Object.keys(this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices).map((machSpecs, idx) => {
-            
+
             // machSpecs = this.state.currentCell[1].devices[machSpecs];
             machSpecs = this.props.cells[Object.keys(this.props.cells)[this.state.currentCell[0]]].devices[machSpecs];
             return (
