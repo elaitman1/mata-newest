@@ -10,18 +10,6 @@ export default class Inspection extends Component {
     showConfirmation: false
   };
 
-  latestJobNumber = () => {
-
-    fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataparts.php?id=${JSON.parse(localStorage.getItem("Mata Inventive")).ID}`)
-    .then(r=>r.json())
-    .then(r=>{
-      let latestStartJobEntry = r.find(machine=> this.props.machine.device_id === this.props.machine.device_id)
-      this.setState({latestJobNumber:latestStartJobEntry.jobnumber})
-      this.setState({latestPartNumber:latestStartJobEntry.partnumber})
-    })
-  }
-  this.latestJobNumber();
-
   updatePartsNum = (type, oper) => {
     return () => {
       this.setState(prevState => {
@@ -54,6 +42,14 @@ export default class Inspection extends Component {
   };
 
   saveInspection = async (type, count) => {
+    fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataparts.php?id=${JSON.parse(localStorage.getItem("Mata Inventive")).ID}`)
+    .then(r=>r.json())
+    .then(r=>{
+      let latestStartJobEntry = r.find(machine=> this.props.machine.device_id === this.props.machine.device_id)
+      this.setState({latestJobNumber:latestStartJobEntry.jobnumber})
+      this.setState({latestPartNumber:latestStartJobEntry.partnumber})
+    })
+
     const url =
       "https://www.matainventive.com/cordovaserver/database/insertreport.php";
     const data = {
