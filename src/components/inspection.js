@@ -49,8 +49,8 @@ export default class Inspection extends Component {
       deviceid: this.props.machine.device_id,
       comment: type,
       number: count,
-      jobnumber: this.props.latestJob["job"],
-      partnumber: this.props.latestJob["part"]
+      jobnumber: this.state.jobs[this.state.currentJob - 1].inputValues.jobNumber,
+      partnumber: this.state.jobs[this.state.currentJob - 1].inputValues.partNumber//this.props.latestJob["part"]
     };
 
     fetch(url, {
