@@ -24,6 +24,7 @@ export default class Reporting extends Component {
     firstCellSelection: true,
     showConfirmation: false,
     prepCheckJobNum:0,
+    latestJobNumber:"",
   };
 
   componentDidMount = () => {
@@ -41,7 +42,7 @@ export default class Reporting extends Component {
       let prepVal = this.props.machine.reporting[prepType];
       if (prepType !== "jobnumber" && prepType !== "partnumber"){
         if (prepType === "notes") {
-          reportingObj.Note = prepVal;
+          reportingObj.Note = "";
         } else {
           prepVal = this.handleEmptyString(prepVal);
           const stateKeys = reportingDict[prepType];
@@ -159,6 +160,7 @@ export default class Reporting extends Component {
   };
 
   postNote = async () => {
+    
     const url =
       "https://www.matainventive.com/cordovaserver/database/insertnote.php";
     const data = {
@@ -237,12 +239,17 @@ export default class Reporting extends Component {
     });
   };
 
+  latestJobNumber = () => {
+
+    fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataparts.php?id=${this.props.user.ID}`)
+    .then(r=>r.json())
+    .then(r=>{
+      let latestStartJobEntry = r.find(machine=> this.props.machine.device_id === machine.device_id)
+      this.setState({latestJobNumber:latestStartJobEntry.jobnumber})
+    })
+  }
+
    handleNextJobNumber = async() => {
-     //  {Object.keys(this.props.chats.Jobs).map((jobNumber, idx)=>{
-     //   return<ul className="listJobNumber">
-     //  <li key={idx}>{jobNumber}</li>
-     //   </ul>
-     // })}
     if (this.state.prepCheckJobNum >= Object.keys(this.props.chats.Jobs).length - 1){
       await this.setState({prepCheckJobNum:0})
     }else{
@@ -289,12 +296,15 @@ export default class Reporting extends Component {
           bool={this.state.cells[this.state.cellSelected][checkList]}
         />
       ));
+
+      this.latestJobNumber()
+
       return (
         <div>
           <div className="preparation-checklist-container">
             <h4>Reporting</h4>
             <h4>For Job# {" "}
-             {this.props.latestJob["job"]}
+             {this.state.latestJobNumber}
             </h4>
                   <header className="preparation-checklist-cells-container">
                     {this.renderCells()}

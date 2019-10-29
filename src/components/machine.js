@@ -9,7 +9,6 @@ import TakePhoto from './camera'
 export default class Machine extends Component {
   state = {
     selectedTask: null,
-    // cameraView: false,
     jobNumber: "",
     inputIndicator: "",
     partNumber: "",
@@ -68,6 +67,7 @@ export default class Machine extends Component {
       case "Reporting":
         this.loadLatestJob();
         return <Reporting
+        user={this.props.user}
         chats={this.props.chats}
         machine={this.props.machine}
         saveReporting={this.props.saveReporting}
@@ -90,7 +90,7 @@ export default class Machine extends Component {
   };
 
   render = () => {
-    
+
     const buttonTypes = [
       "Start Job",
       "Reporting",

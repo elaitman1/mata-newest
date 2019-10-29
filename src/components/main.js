@@ -20,6 +20,7 @@ const Main = props => {
     } else if (props.displayChat) {
       return (
         <ChatItem
+          user={props.user}
           chats={props.chats}
           displayChat={props.displayChat}
           setInitialTime={props.setInitialTime}
@@ -39,6 +40,7 @@ const Main = props => {
       } else {
         return (
           <Machine
+            user={props.user}
             machine={props.machineSelected}
             chats={props.chats}
             toggleMachineSelection={props.toggleMachineSelection}

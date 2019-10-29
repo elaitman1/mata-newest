@@ -62,6 +62,7 @@ export default class StartJob extends Component {
   }
 
   addJob = () => {
+    debugger
     let newJobs = this.state.jobs.slice();
     let jobNum = newJobs.length + 1;
     const newJob = {
