@@ -137,7 +137,7 @@ export default class StartJob extends Component {
       this.postAllJobs().then(res => {
         console.log("res", res);
         this.props.saveNewJob(this.state.jobs)
-        this.props.latestJob = this.state.jobs[this.state.currentJob - 1]
+        //this.props.latestJob = this.state.jobs[this.state.currentJob - 1]
         this.toggleConfirmation();
       })
     } else {

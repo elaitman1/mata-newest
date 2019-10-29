@@ -167,8 +167,8 @@ export default class Reporting extends Component {
       userid: JSON.parse(localStorage.getItem("Mata Inventive")).ID,
       deviceid: this.props.machine.device_id,
       note: this.state.cells.Note,
-      partnumber: this.props.latestJob["part"],
-      jobnumber: this.props.latestJob["job"]
+      partnumber: "",
+      jobnumber: this.state.latestJobNumber
     };
 
     fetch(url, {
