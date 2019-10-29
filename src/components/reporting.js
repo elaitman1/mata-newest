@@ -25,6 +25,7 @@ export default class Reporting extends Component {
     showConfirmation: false,
     prepCheckJobNum:0,
     latestJobNumber:"",
+    latestPartNumber:"",
   };
 
   componentDidMount = () => {
@@ -167,7 +168,7 @@ export default class Reporting extends Component {
       userid: JSON.parse(localStorage.getItem("Mata Inventive")).ID,
       deviceid: this.props.machine.device_id,
       note: this.state.cells.Note,
-      partnumber: "",
+      partnumber: this.state.latestPartNumber,
       jobnumber: this.state.latestJobNumber
     };
 
@@ -246,6 +247,7 @@ export default class Reporting extends Component {
     .then(r=>{
       let latestStartJobEntry = r.find(machine=> this.props.machine.device_id === machine.device_id)
       this.setState({latestJobNumber:latestStartJobEntry.jobnumber})
+      this.setState({latestPartNumber:latestStartJobEntry.partnumber})
     })
   }
 
