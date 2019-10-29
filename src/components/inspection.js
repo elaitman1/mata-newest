@@ -20,7 +20,6 @@ export default class Inspection extends Component {
       this.setState({latestPartNumber:latestStartJobEntry.partnumber})
     })
   }
-  latestJobNumber();
 
   updatePartsNum = (type, oper) => {
     return () => {
@@ -145,6 +144,7 @@ export default class Inspection extends Component {
         />
       );
     } else {
+      this.latestJobNumber();
       return (
         <div className="inspection-container">
           <h4>Inspection</h4>
