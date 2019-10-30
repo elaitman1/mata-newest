@@ -425,6 +425,7 @@ export default class App extends Component {
             }
           };
         }
+        // }
       });
 
       chatHistory.forEach(chat => {
@@ -655,27 +656,20 @@ export default class App extends Component {
       .catch(error => console.error("Error:", error));
   };
 
-  sendNewMessage = (type, chat, message, noteValue="") => {
-    
+  sendNewMessage = (type, chat, message) => {
     let newChats = this.state.chats;
     const newMessage = ["user", message, Date.now()];
     newChats[type][chat].chatHistory.chatLog.push(newMessage);
     this.setState({ chats: newChats });
-    this.machineReplyMessage(type, chat, message, noteValue);
+    this.machineReplyMessage(type, chat, message);
   };
 
-  machineReplyMessage = (type, chat, message, noteValue="") => {
-    
+  machineReplyMessage = (type, chat, message) => {
     const errorReply =
       "Error code 404, aka something wrong with your input. Maybe try one of the presets?";
     let newChats = this.state.chats;
-
     let replyMessage = newChats[type][chat].responses[message];
-    if(replyMessage !== ""){
-      replyMessage = noteValue
-    }else{
-      replyMessage = replyMessage ? replyMessage : errorReply;
-    }
+    replyMessage = replyMessage ? replyMessage : errorReply;
     replyMessage = ["machine", replyMessage];
     newChats[type][chat].chatHistory.chatLog.push(replyMessage);
     this.setState({ chats: newChats });
@@ -751,11 +745,7 @@ export default class App extends Component {
             }}
           />
           <span id="chat" className="chat-wrapper">
-            <Chat
-            selectChat={this.selectChat}
-            chats={this.state.chats}
-            user={this.state.user}
-            />
+            <Chat selectChat={this.selectChat} chats={this.state.chats} />
           </span>
           <div>
             <Navbar
