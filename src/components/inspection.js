@@ -92,7 +92,7 @@ export default class Inspection extends Component {
     let insps = [];
     for (let i = 0; i < types.length; i++) {
       const type = types[i];
-      if (type !== "showConfirmation") {
+      if (type !== "showConfirmation" && partsType !== "latestJobNumber" && partsType !== "latestPartNumber") {
         const count = this.state[type];
         const insp = await this.saveInspection(type, count);
         insps.push(insp);
