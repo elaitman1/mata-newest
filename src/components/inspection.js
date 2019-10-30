@@ -135,6 +135,7 @@ export default class Inspection extends Component {
       }
     });
 
+    this.latestJobNumber();
     if (this.state.showConfirmation) {
       return (
         <Confirmation
@@ -144,7 +145,6 @@ export default class Inspection extends Component {
         />
       );
     } else {
-      this.latestJobNumber();
       return (
         <div className="inspection-container">
           <h4>Inspection</h4>
