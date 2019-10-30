@@ -120,7 +120,7 @@ export default class Inspection extends Component {
 
     const totalParts = _.sum([good, bad, rework]);
     const partsInputs = Object.keys(this.state).map((partsType, idx) => {
-      if (partsType !== "showConfirmation") {
+      if (partsType !== "showConfirmation" && partsType !== "latestJobNumber" && partsType !== "latestPartNumber") {
         let type = _.capitalize(partsType.slice(0, partsType.length - 5));
         return (
           <PartsInput
