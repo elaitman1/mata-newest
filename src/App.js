@@ -671,6 +671,11 @@ export default class App extends Component {
     let newChats = this.state.chats;
 
     let replyMessage = newChats[type][chat].responses[message];
+    // if(replyMessage !== ""){
+    //   replyMessage = noteValue
+    // }else{
+    //   replyMessage = replyMessage ? replyMessage : errorReply;
+    // }
     replyMessage = ["machine", replyMessage];
     newChats[type][chat].chatHistory.chatLog.push(replyMessage);
     this.setState({ chats: newChats });
