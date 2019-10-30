@@ -3,8 +3,7 @@ import React, { Component } from "react";
 export default class ChatItem extends Component {
   state = {
     message: "",
-    focusedMessageInput: false,
-    Note:"",
+    focusedMessageInput: false
   };
 
   // converts Date.now() milliseconds into the time, in the appropriate measurement, since the message was sent
@@ -27,18 +26,13 @@ export default class ChatItem extends Component {
     }
   };
 
-  componentDidMount(){
-    if (this.state.Note === "")
-    this.fetchNoteRecs()
-  }
-
   update = e => {
     this.setState({ message: e.currentTarget.value });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-
+    
     if (this.state.message.trim() !== "") {
       this.checkChatInitialTime();
       this.props.sendNewMessage(
@@ -50,15 +44,13 @@ export default class ChatItem extends Component {
     }
   };
 
-  sendRecommendationAsMessage = (recom) => {
-    console.log(recom)
+  sendRecommendationAsMessage = recom => {
     return () => {
       this.checkChatInitialTime();
       this.props.sendNewMessage(
         this.props.displayChat[0],
         this.props.displayChat[1],
-        recom,
-        this.state.Note
+        recom
       );
     };
   };
@@ -90,7 +82,6 @@ export default class ChatItem extends Component {
         displayStyle = "none";
         marginBottom = "40px"
       }
-
       setTimeout(() => {
         document.getElementById("recommendations").style.display = displayStyle
         document.getElementById("messages").style.marginBottom = marginBottom
@@ -98,84 +89,17 @@ export default class ChatItem extends Component {
     }
   }
 
-    fetchNoteRecs = async() => {
-      let foundMachine
-     await fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataparts.php?id=${this.props.user.ID}`)
-       .then(r => r.json())
-       .then(r=> {
-         this.setNoteState(
-           r.find(machine=>{
-            if(this.props.displayChat[0] === "Parts"){
-               if(machine.partnumber === this.props.displayChat[1]){
-                return machine
-               }
-            } else if(this.props.displayChat[0] === "Jobs") {
-               if(machine.jobnumber === this.props.displayChat[1]) {
-                 return machine
-               }
-            } else if(this.props.displayChat[0] === "Machines") {
-              return this.findMachineNote()
-            }
-          }))
-        })
-      }
-
-    setNoteState = async (value) => {
-
-      let id = value.device_id
-      let note
-      await fetch(`https://www.matainventive.com/cordovaserver/database/jsonmatanotes.php?id=${this.props.user.ID}`)
-      .then(r=>r.json())
-      .then(r=>{
-
-        let foundMachineWithNote = r.find(machine=>{
-
-          if(machine.device_id === id){
-
-            let n = machine.note
-            if (n === ""){
-              return note = " "
-            }else{
-              return note = n
-            }
-          }
-        })
-        this.setState({Note:note})
-    })
-  }
-
-    findMachineNote = async () => {
-      await fetch(`https://www.matainventive.com/cordovaserver/database/jsonmatacelladd.php?id=${this.props.user.ID}`)
-      .then(r=>r.json())
-      .then(r=>{
-        return r.find(machine=>{
-          if(machine.name === this.props.displayChat[1]){
-            return machine
-          }
-        })
-      })
-    }
-
-
-
   render = () => {
+
     const chatItem = this.props.chats[this.props.displayChat[0]][
       this.props.displayChat[1]
     ];
-
-    if(this.state.Note !== "" && this.state.Note !== " "){
-
-      chatItem.responses["Note"] = this.state.note
-    }
 
     return (
       <div className="chat-item-container">
         <h5>{chatItem.chatHistory.chatFirstBegan}</h5>
         <section id="messages" className="chat-item-messages-container">
           {chatItem.chatHistory.chatLog.map((chat, idx) => {
-
-
-
             const machImg =
               chat[0] === "machine" ? (
                 <img src="./assets/machine.png" alt="MachIcon" />
@@ -221,7 +145,6 @@ export default class ChatItem extends Component {
         <form className="chat-item-message-submit" onSubmit={this.handleSubmit}>
           <div id="recommendations" className="chat-item-message-submit-recommendations">
             {Object.keys(chatItem.responses).map((recom, idx) => (
-
               <p key={idx} onClick={this.sendRecommendationAsMessage(recom)}>
                 {recom}
               </p>
