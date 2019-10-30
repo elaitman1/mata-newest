@@ -15,7 +15,7 @@ export default class Inspection extends Component {
     fetch(`https://www.matainventive.com/cordovaserver/database/jsonmataparts.php?id=${JSON.parse(localStorage.getItem("Mata Inventive")).ID}`)
     .then(r=>r.json())
     .then(r=>{
-      let latestStartJobEntry = r.find(machine=> this.props.machine.device_id === this.props.machine.device_id)
+      let latestStartJobEntry = r.find(machine => machine.device_id === this.props.machine.device_id);
       this.setState({latestJobNumber:latestStartJobEntry.jobnumber})
       this.setState({latestPartNumber:latestStartJobEntry.partnumber})
     })
@@ -92,7 +92,7 @@ export default class Inspection extends Component {
     let insps = [];
     for (let i = 0; i < types.length; i++) {
       const type = types[i];
-      if (type !== "showConfirmation" && partsType !== "latestJobNumber" && partsType !== "latestPartNumber") {
+      if (type !== "showConfirmation" && type!== "latestJobNumber" && type !== "latestPartNumber") {
         const count = this.state[type];
         const insp = await this.saveInspection(type, count);
         insps.push(insp);
