@@ -354,7 +354,8 @@ export default class App extends Component {
             chatHistory: { chatFirstBegan: "", chatLog: [] },
             responses: {
               "Machine Utilization": `${cellDev["utilization"]}% of utilization.`,
-              "Machine Status": status
+              "Machine Status": status,
+              "Note": ""
             }
           };
 
@@ -402,7 +403,8 @@ export default class App extends Component {
             "Start Time": editTimeZDisplay,
             "Part Number": partnumber,
             "Part Count": partcount,
-            "Inspection": "Good:" + inspectgood.toString() + ",Bad:" + inspectbad.toString()
+            "Inspection": "Good:" + inspectgood.toString() + ",Bad:" + inspectbad.toString(),
+            "Note": ""
           }
         };
 
@@ -421,7 +423,8 @@ export default class App extends Component {
             responses: {
               "Start Time": `${jobnumber}: ${editTimeZDisplay}`,
               "Latest Job Number": jobnumber,
-              "Part Count": `${jobnumber}: ${partcount}`
+              "Part Count": `${jobnumber}: ${partcount}`,
+              "Note": ""
             }
           };
         }
