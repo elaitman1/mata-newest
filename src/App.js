@@ -245,8 +245,8 @@ export default class App extends Component {
       const timers = this.createObjectWithIDKeys(data[6]);
       const reporting = this.createObjectWithIDKeys(data[7]);
       const prepNotes = this.createObjectWithIDKeys(data[8]);
-      const prepNotesPart = this.createObjectWithPartKeys(data[8]);
-      const prepNotesJob = this.createObjectWithJobKeys(data[8]);
+      const prepPartNotes = this.createObjectWithPartKeys(data[8]);
+      const prepJobNotes = this.createObjectWithJobKeys(data[8]);
       const chatHistory = data[9];
       const inspectHistory = data[10];
 
@@ -398,6 +398,12 @@ export default class App extends Component {
           }
         })
 
+        let jobnotes = "";
+        const prepJobNote = prepJobNotes[id];
+        if (prepJobNote) {
+          jobnotes = prepJobNote.note;
+        }
+
         // if (editTime.slice(0, 10) === latestJobPartDate) {
         chatObj.Jobs[jobnumber] = {
           chatHistory: { chatFirstBegan: "", chatLog: [] },
@@ -406,7 +412,7 @@ export default class App extends Component {
             "Part Number": partnumber,
             "Part Count": partcount,
             "Inspection": "Good:" + inspectgood.toString() + ",Bad:" + inspectbad.toString(),
-            "Note": ""
+            "Note": jobnotes
           }
         };
 
