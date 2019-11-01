@@ -403,7 +403,6 @@ export default class App extends Component {
         if (prepJobNote) {
           jobnotes = prepJobNote.note;
         }
-
         // if (editTime.slice(0, 10) === latestJobPartDate) {
         chatObj.Jobs[jobnumber] = {
           chatHistory: { chatFirstBegan: "", chatLog: [] },
@@ -416,6 +415,11 @@ export default class App extends Component {
           }
         };
 
+        let partnotes = "";
+        const prepPartNote = prepPartNotes[partnumber];
+        if (prepPartNote) {
+          partnotes = prepPartNote.note;
+        }
         const currLatestJobForPart = chatObj.Parts[partnumber];
         let currLatestPartEditTime;
         if (currLatestJobForPart) {
@@ -432,7 +436,7 @@ export default class App extends Component {
               "Start Time": `${jobnumber}: ${editTimeZDisplay}`,
               "Latest Job Number": jobnumber,
               "Part Count": `${jobnumber}: ${partcount}`,
-              "Note": ""
+              "Note": partnotes
             }
           };
         }
