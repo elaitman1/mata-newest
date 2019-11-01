@@ -245,6 +245,8 @@ export default class App extends Component {
       const timers = this.createObjectWithIDKeys(data[6]);
       const reporting = this.createObjectWithIDKeys(data[7]);
       const prepNotes = this.createObjectWithIDKeys(data[8]);
+      const prepNotesPart = this.createObjectWithPartKeys(data[8]);
+      const prepNotesJob = this.createObjectWithJobKeys(data[8]);
       const chatHistory = data[9];
       const inspectHistory = data[10];
 
@@ -355,7 +357,7 @@ export default class App extends Component {
             responses: {
               "Machine Utilization": `${cellDev["utilization"]}% of utilization.`,
               "Machine Status": status,
-              "Note": ""
+              "Note": notes
             }
           };
 
@@ -480,6 +482,44 @@ export default class App extends Component {
       let id;
       Object.keys(obj).forEach(key => {
         if (key === "device_id") {
+          id = obj[key];
+        } else {
+          newObj[key] = obj[key];
+        }
+      });
+      if (!outputObject[id]) {
+        outputObject[id] = newObj;
+      }
+    });
+    return outputObject;
+  };
+
+  createObjectWithJobKeys = objectsArr => {
+    let outputObject = {};
+    objectsArr.forEach(obj => {
+      let newObj = {};
+      let id;
+      Object.keys(obj).forEach(key => {
+        if (key === "jobnumber") {
+          id = obj[key];
+        } else {
+          newObj[key] = obj[key];
+        }
+      });
+      if (!outputObject[id]) {
+        outputObject[id] = newObj;
+      }
+    });
+    return outputObject;
+  };
+
+  createObjectWithPartKeys = objectsArr => {
+    let outputObject = {};
+    objectsArr.forEach(obj => {
+      let newObj = {};
+      let id;
+      Object.keys(obj).forEach(key => {
+        if (key === "partnumber") {
           id = obj[key];
         } else {
           newObj[key] = obj[key];
