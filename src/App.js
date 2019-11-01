@@ -399,7 +399,7 @@ export default class App extends Component {
         })
 
         let jobnotes = "";
-        const prepJobNote = prepJobNotes[id];
+        const prepJobNote = prepJobNotes[jobnumber];
         if (prepJobNote) {
           jobnotes = prepJobNote.note;
         }
