@@ -67,6 +67,7 @@ export default class Machine extends Component {
       case "Reporting":
         this.loadLatestJob();
         return <Reporting
+        login={this.props.login}
         user={this.props.user}
         chats={this.props.chats}
         machine={this.props.machine}
