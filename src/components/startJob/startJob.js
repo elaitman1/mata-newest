@@ -57,7 +57,6 @@ export default class StartJob extends Component {
   };
 
   cameraOff = () => {
-
     this.setState({showCamera:!this.state.showCamera})
   }
 
