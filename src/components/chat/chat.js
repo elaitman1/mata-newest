@@ -248,13 +248,14 @@ const ChatGroup = props => {
       {props.type === "Machines"?
         <h5>{props.type}</h5> 
       : 
-        <h5>{props.type} 
+        <div class='toggleChatContainer'>
+        <h5>{props.type}</h5> 
         <label class="switch" >       
         <input class="switch-input" type="checkbox"/>
         <span value={props.type} class="switch-label" data-on="All" data-off="Today" onClick={(param)=>props.toggleAllChatsState(param)}></span> 
         <span value={props.type}class="switch-handle" onClick={(param)=>props.toggleAllChatsState(param)}></span>
         </label>
-        </h5>
+        </div>
       }
       {chatGroupItems}
     </div>
