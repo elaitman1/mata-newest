@@ -3,8 +3,16 @@ import _ from "lodash";
 
 export default class Chat extends Component {
   state = {
-    search: ""
+    search: "",
+    showToday:true,
+    targetHeader:""
   };
+
+  toggleAllChatsState = (e) => {
+   let {allChats, showToday} = this.state 
+      this.setState({allChats:!allChats, showToday:!showToday, targetHeader:e.target.attributes[0].nodeValue
+    })
+  }
 
   update = e => {
     this.setState({ search: e.currentTarget.value });
@@ -16,11 +24,11 @@ export default class Chat extends Component {
   };
 
   render = () => {
+   let {showToday, search, targetHeader} = this.state
     const chats = this.props.chats;
 
     let latestJobPartDate, filteredChatResult;
-    if (this.state.search.trim() === "") {
-
+    if (search.trim() === "" && showToday) {
       Object.keys(chats).forEach(chatType => {
 
         if (chatType !== "Machines") {
@@ -66,6 +74,96 @@ export default class Chat extends Component {
         }
       });
 
+    }else if (search.trim() === "" && !showToday && targetHeader === "Parts") {
+      Object.keys(chats).forEach(chatType => {
+
+        if (chatType !== "Machines") {
+          Object.keys(chats[chatType]).forEach(chatName => {
+
+            const chatObj = chats[chatType][chatName];
+            const startTime = chatObj.responses["Start Time"];
+            const editTime =
+              chatType === "Parts"
+                ? startTime.slice(startTime.length - 19, startTime.length)
+                : startTime;
+            if (!latestJobPartDate || new Date(editTime) > new Date(latestJobPartDate)) {
+              latestJobPartDate = editTime;
+            }
+          });
+        }
+      });
+
+      filteredChatResult = {
+        Machines: this.props.chats.Machines,
+        Parts: this.props.chats.Parts,
+        Jobs: {}
+      };
+
+      let d = new Date(latestJobPartDate);
+      let latestJobPartDateOutput = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+
+      Object.keys(chats).forEach(chatType => {
+        if (chatType !== "Machines") {
+          Object.keys(chats[chatType]).forEach(chatName => {
+            const chatObj = chats[chatType][chatName];
+            const startTime = chatObj.responses["Start Time"];
+            const editTime =
+              chatType === "Parts"
+                ? startTime.slice(startTime.length - 19, startTime.length)
+                : startTime;
+        let d = new Date(editTime);
+        let editTimeOutput = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+            if (editTimeOutput === latestJobPartDateOutput) {
+              filteredChatResult[chatType][chatName] = chatObj;
+            }
+          });
+        }
+      });
+    }else if(search.trim() === "" && !showToday && targetHeader === "Jobs"){
+      Object.keys(chats).forEach(chatType => {
+
+        if (chatType !== "Machines") {
+          Object.keys(chats[chatType]).forEach(chatName => {
+
+            const chatObj = chats[chatType][chatName];
+            const startTime = chatObj.responses["Start Time"];
+            const editTime =
+              chatType === "Parts"
+                ? startTime.slice(startTime.length - 19, startTime.length)
+                : startTime;
+            if (!latestJobPartDate || new Date(editTime) > new Date(latestJobPartDate)) {
+              latestJobPartDate = editTime;
+            }
+          });
+        }
+      });
+
+      filteredChatResult = {
+        Machines: this.props.chats.Machines,
+        Parts: {},
+        Jobs: this.props.chats.Jobs
+      };
+
+      let d = new Date(latestJobPartDate);
+      let latestJobPartDateOutput = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+
+      Object.keys(chats).forEach(chatType => {
+        if (chatType !== "Machines") {
+          Object.keys(chats[chatType]).forEach(chatName => {
+            const chatObj = chats[chatType][chatName];
+            const startTime = chatObj.responses["Start Time"];
+            const editTime =
+              chatType === "Parts"
+                ? startTime.slice(startTime.length - 19, startTime.length)
+                : startTime;
+        let d = new Date(editTime);
+        let editTimeOutput = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+            if (editTimeOutput === latestJobPartDateOutput) {
+              filteredChatResult[chatType][chatName] = chatObj;
+            }
+          });
+        }
+      });
     } else {
       filteredChatResult = {
         Machines: {},
@@ -116,6 +214,7 @@ export default class Chat extends Component {
               type={type}
               chats={chats}
               selectChat={this.props.selectChat}
+              toggleAllChatsState={this.toggleAllChatsState}
             />
           );
         })}
@@ -123,13 +222,26 @@ export default class Chat extends Component {
     );
   };
 }
-
 const ChatGroup = props => {
+  
+  let sortedList = Object.keys(props.chats).sort(function (a, b) {
+    var x = a.toUpperCase(),
+        y = b.toUpperCase();
+    if (x > y) {
+        return 1;
+    }
+    if (x < y) {
+        return -1;
+    }
+    return 0;
+  });
+
   const chatGroupItems =
-    Object.keys(props.chats).length === 0 ? (
+  sortedList.length === 0 ? (
       <p>No {_.lowerFirst(props.type)} for your searched value.</p>
     ) : (
-      Object.keys(props.chats).map((chat, idx) => {
+      
+      sortedList.map((chat, idx) => {
         const className = `chat-group-item-icon ${props.type}`;
         return (
           <div
@@ -146,7 +258,18 @@ const ChatGroup = props => {
 
   return (
     <div className="chat-group-container">
-      <h5>{props.type}</h5>
+      {props.type === "Machines"?
+        <h5>{props.type}</h5> 
+      : 
+        <div class='toggleChatContainer'>
+        <h5>{props.type}</h5> 
+        <label class="switch" >       
+        <input class="switch-input" type="checkbox"/>
+        <span value={props.type} class="switch-label" data-on="All" data-off="Today" onClick={(param)=>props.toggleAllChatsState(param)}></span> 
+        <span value={props.type}class="switch-handle" onClick={(param)=>props.toggleAllChatsState(param)}></span>
+        </label>
+        </div>
+      }
       {chatGroupItems}
     </div>
   );

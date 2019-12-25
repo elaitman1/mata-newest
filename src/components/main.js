@@ -40,6 +40,7 @@ const Main = props => {
       } else {
         return (
           <Machine
+            login={props.logIn}
             user={props.user}
             machine={props.machineSelected}
             chats={props.chats}

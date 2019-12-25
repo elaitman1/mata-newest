@@ -204,8 +204,12 @@ export default class Reporting extends Component {
         prevCell: null,
         prevNote: this.state.cells.Note
       });
+      this.props.login(this.props.user.ID)
       this.toggleNote();
     });
+    
+    
+    
   };
 
   // similar logic to save note, but uses a previously saved value to switch the value back to it so as not to save any updates the user may have

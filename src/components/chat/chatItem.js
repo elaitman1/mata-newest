@@ -26,6 +26,11 @@ export default class ChatItem extends Component {
     }
   };
 
+  componentDidMount(){
+    var element = document.getElementById("messages");
+    element.scrollTop = element.scrollHeight;
+  }
+
   update = e => {
     this.setState({ message: e.currentTarget.value });
   };
