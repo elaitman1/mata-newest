@@ -222,13 +222,26 @@ export default class Chat extends Component {
     );
   };
 }
-
 const ChatGroup = props => {
+  
+  let sortedList = Object.keys(props.chats).sort(function (a, b) {
+    var x = a.toUpperCase(),
+        y = b.toUpperCase();
+    if (x > y) {
+        return 1;
+    }
+    if (x < y) {
+        return -1;
+    }
+    return 0;
+  });
+
   const chatGroupItems =
-    Object.keys(props.chats).length === 0 ? (
+  sortedList.length === 0 ? (
       <p>No {_.lowerFirst(props.type)} for your searched value.</p>
     ) : (
-      Object.keys(props.chats).map((chat, idx) => {
+      
+      sortedList.map((chat, idx) => {
         const className = `chat-group-item-icon ${props.type}`;
         return (
           <div
